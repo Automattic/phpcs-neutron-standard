@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<ruleset name="NeutronStandard">
+ <description>Coding guidelines for Neutron.</description>
+</ruleset>

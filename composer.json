@@ -1,0 +1,16 @@
+{
+    "name": "sirbrillig/phpcs-neutron-standard",
+    "description": "A set of phpcs sniffs for Neutron.",
+    "type": "phpcodesniffer-standard",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Payton Swick",
+            "email": "payton@foolord.com"
+        }
+    ],
+    "require": {},
+    "require-dev": {
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.4.3"
+    }
+}
