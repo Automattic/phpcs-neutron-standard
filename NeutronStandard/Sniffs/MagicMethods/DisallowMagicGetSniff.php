@@ -12,11 +12,7 @@ class DisallowMagicGetSniff implements Sniff {
 
 	public function process( File $phpcsFile, $stackPtr ) {
 		$tokens = $phpcsFile->getTokens();
-		if (! isset($tokens[$stackPtr+2])) {
-			return;
-		}
-		$functionNameToken = $tokens[$stackPtr+2];
-		$functionName = $functionNameToken['content'];
+		$functionName = $phpcsFile->getDeclarationName($stackPtr);
 		if ($functionName === '__get') {
 			$error = 'Magic getters are not allowed';
 			$phpcsFile->addError($error, $stackPtr, 'MagicGet');
