@@ -1,21 +1,24 @@
 <?php
 
-namespace NeutronStandard\Sniffs\Extract;
+namespace NeutronStandard\Sniffs\Constants;
 
 use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Files\File;
 
-class DisallowExtractSniff implements Sniff {
+class DisallowDefineSniff implements Sniff {
 	public function register() {
 		return [T_STRING];
 	}
 
 	public function process(File $phpcsFile, $stackPtr) {
+		if (! $this->isFunctionCall($phpcsFile, $stackPtr)) {
+			return;
+		}
 		$tokens = $phpcsFile->getTokens();
 		$functionName = $tokens[$stackPtr]['content'];
-		if ($functionName === 'extract' && $this->isFunctionCall($phpcsFile, $stackPtr)) {
-			$error = 'Extract is not allowed';
-			$phpcsFile->addError($error, $stackPtr, 'Extract');
+		if ($functionName === 'define') {
+			$error = 'Define is not allowed';
+			$phpcsFile->addError($error, $stackPtr, 'Define');
 		}
 	}
 
@@ -34,3 +37,4 @@ class DisallowExtractSniff implements Sniff {
 		return true;
 	}
 }
+
