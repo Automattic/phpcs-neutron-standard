@@ -11,6 +11,10 @@
     ],
     "require": {},
     "require-dev": {
-        "dealerdirect/phpcodesniffer-composer-installer": "^0.4.3"
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.4.3",
+        "phpunit/phpunit": "^6.4"
+    },
+    "scripts": {
+        "test": "./vendor/bin/phpunit --bootstrap ./Test/phpcs3-bootstrap.php --filter NeutronStandard ./vendor/squizlabs/php_codesniffer/tests/AllTests.php"
     }
 }
