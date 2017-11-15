@@ -10,7 +10,7 @@ class DisallowMagicSetSniff implements Sniff {
 		return [T_FUNCTION];
 	}
 
-	public function process( File $phpcsFile, $stackPtr ) {
+	public function process(File $phpcsFile, $stackPtr) {
 		$functionName = $phpcsFile->getDeclarationName($stackPtr);
 		if ($functionName === '__set') {
 			$error = 'Magic setters are not allowed';
