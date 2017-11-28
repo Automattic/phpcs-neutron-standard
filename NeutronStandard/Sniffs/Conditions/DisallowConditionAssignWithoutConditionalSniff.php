@@ -31,6 +31,7 @@ class DisallowConditionAssignWithoutConditionalSniff implements Sniff {
 			T_IS_GREATER_OR_EQUAL,
 			T_LESS_THAN,
 			T_GREATER_THAN,
+			T_SPACESHIP,
 		];
 		$nextEqualPtr = $phpcsFile->findNext($comparators, $stackPtr + 1, $endOfStatementPtr, false, null, false);
 		if ($nextEqualPtr) {
