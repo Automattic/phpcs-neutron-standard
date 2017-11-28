@@ -26,7 +26,9 @@ class DisallowConditionAssignWithoutConditionalSniff implements Sniff {
 		// if there is not a T_IS_EQUAL (or any other comparator!) before the end of statement
 		$comparators = [
 			T_IS_EQUAL,
+			T_IS_NOT_EQUAL,
 			T_IS_IDENTICAL,
+			T_IS_NOT_IDENTICAL,
 			T_IS_SMALLER_OR_EQUAL,
 			T_IS_GREATER_OR_EQUAL,
 			T_LESS_THAN,
