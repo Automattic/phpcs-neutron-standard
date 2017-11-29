@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace NeutronStandard;
 
-use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Files\File;
 
 class SniffHelpers {
