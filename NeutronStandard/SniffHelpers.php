@@ -20,4 +20,14 @@ class SniffHelpers {
 		}
 		return true;
 	}
+
+	// From https://stackoverflow.com/questions/619610/whats-the-most-efficient-test-of-whether-a-php-string-ends-with-another-string
+	public function doesStringEndWith(string $string, string $test): bool {
+		$strlen = strlen($string);
+		$testlen = strlen($test);
+		if ($testlen > $strlen) {
+			return false;
+		}
+		return substr_compare($string, $test, $strlen - $testlen, $testlen) === 0;
+	}
 }
