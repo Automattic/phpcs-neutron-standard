@@ -12,7 +12,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
-        "test": "./vendor/bin/phpunit --bootstrap ./tests/bootstrap.php ./tests/NeutronStandardTest.php"
+        "test": "./vendor/bin/phpunit --bootstrap ./tests/bootstrap.php ./tests/Sniffs/**/*Test.php"
     },
     "require": {},
     "require-dev": {
