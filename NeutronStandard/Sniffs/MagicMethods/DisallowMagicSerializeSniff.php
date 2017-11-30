@@ -18,5 +18,3 @@ class DisallowMagicSerializeSniff implements Sniff {
 		}
 	}
 }
-
-

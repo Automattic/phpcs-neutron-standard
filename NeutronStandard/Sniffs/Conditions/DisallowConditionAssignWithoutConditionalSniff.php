@@ -44,4 +44,3 @@ class DisallowConditionAssignWithoutConditionalSniff implements Sniff {
 		$phpcsFile->addError($error, $stackPtr, 'ConditionAssignWithoutConditional');
 	}
 }
-

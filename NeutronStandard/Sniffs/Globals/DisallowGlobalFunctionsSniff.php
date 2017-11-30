@@ -16,10 +16,7 @@ class DisallowGlobalFunctionsSniff implements Sniff {
 		if (! empty($currentToken['conditions'])) {
 			return;
 		}
-		$functionName = $phpcsFile->getDeclarationName($stackPtr);
 		$error = 'Global functions are not allowed';
 		$phpcsFile->addError($error, $stackPtr, 'GlobalFunctions');
 	}
 }
-
-

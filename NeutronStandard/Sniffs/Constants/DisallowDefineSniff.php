@@ -24,4 +24,3 @@ class DisallowDefineSniff implements Sniff {
 		}
 	}
 }
-

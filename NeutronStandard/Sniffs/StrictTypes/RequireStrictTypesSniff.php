@@ -11,7 +11,9 @@ class RequireStrictTypesSniff implements Sniff {
 	}
 
 	public function process(File $phpcsFile, $stackPtr) {
-		if (! $this->hasInitialDeclare($phpcsFile, $stackPtr) || ! $this->isInitialDeclareStrictTypes($phpcsFile, $stackPtr) || ! $this->isInitialDeclareStrictTypesOn($phpcsFile, $stackPtr)) {
+		if (! $this->hasInitialDeclare($phpcsFile, $stackPtr)
+			|| ! $this->isInitialDeclareStrictTypes($phpcsFile, $stackPtr)
+			|| ! $this->isInitialDeclareStrictTypesOn($phpcsFile, $stackPtr)) {
 			$this->addStrictTypeError($phpcsFile, $stackPtr);
 		}
 	}
@@ -43,4 +45,3 @@ class RequireStrictTypesSniff implements Sniff {
 		$phpcsFile->addError($error, $stackPtr, 'StrictTypes');
 	}
 }
-
