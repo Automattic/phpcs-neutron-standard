@@ -106,11 +106,40 @@ class MyClass {
 			echo $actual;
 		}
 		if ($actual) {
-			return 'yo';
+			echo 'yo';
 		}
 	}
 
-	public function getActual() {
+	public function getActual(): string {
 		return 'hello';
+	}
+
+	// Next line should warn about no type hint
+	public function missingArgHint($arg1): string {
+		return $arg1 . ' yolo';
+	}
+
+	// Next line should warn about no type hint
+	public function missingReturnHint(string $arg1) {
+		return $arg1 . ' yolo';
+	}
+
+	// Next line should warn about no type hint
+	public function missingArgHintTwo($arg1, string $arg2): string {
+		return $arg1 . ' yolo' . $arg2;
+	}
+
+	// Next line should warn about no type hint
+	public function missingArgHintThree(string $arg1, $arg2): string {
+		return $arg1 . ' yolo' . $arg2;
+	}
+
+	public function hasNoReturn(string $arg1, string $arg2) {
+		$arg1;
+		$arg2;
+	}
+
+	public function hasHints(string $arg1): MyClass {
+		return new MyClass($arg1);
 	}
 }
