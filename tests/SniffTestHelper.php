@@ -8,11 +8,14 @@ use PHP_CodeSniffer\Ruleset;
 use PHP_CodeSniffer\Config;
 
 class SniffTestHelper {
-	public function getTestLocalFile(string $sniffFile, string $fixtureFile): LocalFile {
+	public function getTestLocalFile($sniffFiles, string $fixtureFile): LocalFile {
 		$config = new Config();
 		$config->cache = false;
 		$ruleset = new Ruleset($config);
-		$ruleset->registerSniffs([$sniffFile], [], []);
+		if (! is_array($sniffFiles)) {
+			$sniffFiles = [$sniffFiles];
+		}
+		$ruleset->registerSniffs($sniffFiles, [], []);
 		$ruleset->populateTokenListeners();
 		return new LocalFile($fixtureFile, $ruleset, $config);
 	}
