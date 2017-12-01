@@ -12,12 +12,13 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
-        "test": "./vendor/bin/phpunit --bootstrap ./tests/bootstrap.php ./tests"
+        "test": "./vendor/bin/phpunit --bootstrap ./tests/bootstrap.php --printer=LimeDeck\\\\Testing\\\\Printer ./tests"
     },
     "require": {},
     "require-dev": {
         "sirbrillig/phpcs-variable-analysis": "^2.0.1",
         "dealerdirect/phpcodesniffer-composer-installer": "^0.4.3",
-        "phpunit/phpunit": "^6.4"
+        "phpunit/phpunit": "^6.4",
+        "limedeck/phpunit-detailed-printer": "^3.1"
     }
 }
