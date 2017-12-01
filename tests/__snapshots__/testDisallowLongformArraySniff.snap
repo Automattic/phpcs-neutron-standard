@@ -1,1 +1,0 @@
-{"5":{"17":[{"message":"Longform array is not allowed","source":"NeutronStandard.Arrays.DisallowLongformArray.LongformArray","listener":"NeutronStandard\\Sniffs\\Arrays\\DisallowLongformArraySniff","severity":5,"fixable":false}]}}

@@ -18,7 +18,6 @@
     "require-dev": {
         "sirbrillig/phpcs-variable-analysis": "^2.0.1",
         "dealerdirect/phpcodesniffer-composer-installer": "^0.4.3",
-        "sirbrillig/phpunit-just-the-snaps": "dev-master",
         "phpunit/phpunit": "^6.4"
     }
 }

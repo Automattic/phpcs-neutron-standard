@@ -1,1 +1,0 @@
-{"7":{"9":[{"message":"Extract is not allowed","source":"NeutronStandard.Extract.DisallowExtract.Extract","listener":"NeutronStandard\\Sniffs\\Extract\\DisallowExtractSniff","severity":5,"fixable":false}]}}

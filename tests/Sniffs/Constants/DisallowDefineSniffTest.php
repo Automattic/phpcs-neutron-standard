@@ -4,11 +4,8 @@ declare(strict_types=1);
 namespace NeutronStandardTest;
 
 use PHPUnit\Framework\TestCase;
-use PHPUnitJustSnaps\SnapshotAsserter;
 
 class DisallowDefineSniffTest extends TestCase {
-	use SnapshotAsserter;
-
 	public function testDisallowDefineSniff() {
 		$fixtureFile = __DIR__ . '/fixture.php';
 		$sniffFile = __DIR__ . '/../../../NeutronStandard/Sniffs/Constants/DisallowDefineSniff.php';
@@ -17,6 +14,7 @@ class DisallowDefineSniffTest extends TestCase {
 		$phpcsFile = $helper->getTestLocalFile($sniffFile, $fixtureFile);
 		$phpcsFile->process();
 		$foundErrors = $phpcsFile->getErrors();
-		$this->assertMatchesSnapshot($foundErrors);
+		$lines = $helper->getLineNumbersFromMessages($foundErrors);
+		$this->assertEquals([4, 8], $lines);
 	}
 }
