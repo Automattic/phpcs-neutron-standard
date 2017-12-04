@@ -1,6 +1,6 @@
 {
-    "name": "sirbrillig/phpcs-neutron-standard",
-    "description": "A set of phpcs sniffs for Neutron.",
+    "name": "automattic/phpcs-neutron-standard",
+    "description": "A set of phpcs sniffs for modern php development.",
     "type": "phpcodesniffer-standard",
     "license": "MIT",
     "authors": [
