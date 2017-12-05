@@ -13,8 +13,7 @@ class RequireStrictTypesSniffTest extends TestCase {
 		$helper = new SniffTestHelper();
 		$phpcsFile = $helper->getTestLocalFile($sniffFile, $fixtureFile);
 		$phpcsFile->process();
-		$foundErrors = $phpcsFile->getErrors();
-		$lines = $helper->getLineNumbersFromMessages($foundErrors);
+		$lines = $helper->getErrorLineNumbersFromFile($phpcsFile);
 		$this->assertEquals([1], $lines);
 	}
 
@@ -25,8 +24,7 @@ class RequireStrictTypesSniffTest extends TestCase {
 		$helper = new SniffTestHelper();
 		$phpcsFile = $helper->getTestLocalFile($sniffFile, $fixtureFile);
 		$phpcsFile->process();
-		$foundErrors = $phpcsFile->getErrors();
-		$lines = $helper->getLineNumbersFromMessages($foundErrors);
+		$lines = $helper->getErrorLineNumbersFromFile($phpcsFile);
 		$this->assertEquals([], $lines);
 	}
 
@@ -37,8 +35,7 @@ class RequireStrictTypesSniffTest extends TestCase {
 		$helper = new SniffTestHelper();
 		$phpcsFile = $helper->getTestLocalFile($sniffFile, $fixtureFile);
 		$phpcsFile->process();
-		$foundErrors = $phpcsFile->getErrors();
-		$lines = $helper->getLineNumbersFromMessages($foundErrors);
+		$lines = $helper->getErrorLineNumbersFromFile($phpcsFile);
 		$this->assertEquals([], $lines);
 	}
 }

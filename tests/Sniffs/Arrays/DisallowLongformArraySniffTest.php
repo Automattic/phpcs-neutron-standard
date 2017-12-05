@@ -13,8 +13,7 @@ class DisallowLongformArraySniffTest extends TestCase {
 		$helper = new SniffTestHelper();
 		$phpcsFile = $helper->getTestLocalFile($sniffFile, $fixtureFile);
 		$phpcsFile->process();
-		$foundErrors = $phpcsFile->getErrors();
-		$lines = $helper->getLineNumbersFromMessages($foundErrors);
+		$lines = $helper->getErrorLineNumbersFromFile($phpcsFile);
 		$this->assertEquals([5], $lines);
 	}
 }

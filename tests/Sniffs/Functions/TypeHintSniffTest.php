@@ -13,8 +13,7 @@ class TypeHintSniffTest extends TestCase {
 		$helper = new SniffTestHelper();
 		$phpcsFile = $helper->getTestLocalFile($sniffFile, $fixtureFile);
 		$phpcsFile->process();
-		$foundWarnings = $phpcsFile->getWarnings();
-		$lines = $helper->getLineNumbersFromMessages($foundWarnings);
+		$lines = $helper->getWarningLineNumbersFromFile($phpcsFile);
 		$this->assertEquals([118, 123, 128, 133], $lines);
 	}
 }

@@ -11,12 +11,10 @@ class RiskyMagicMethodSniffTest extends TestCase {
 		$sniffFiles = [
 			__DIR__ . '/../../../NeutronStandard/Sniffs/MagicMethods/RiskyMagicMethodSniff.php',
 		];
-
 		$helper = new SniffTestHelper();
 		$phpcsFile = $helper->getTestLocalFile($sniffFiles, $fixtureFile);
 		$phpcsFile->process();
-		$foundWarnings = $phpcsFile->getWarnings();
-		$lines = $helper->getLineNumbersFromMessages($foundWarnings);
+		$lines = $helper->getWarningLineNumbersFromFile($phpcsFile);
 		$this->assertEquals([32, 36, 42], $lines);
 	}
 }

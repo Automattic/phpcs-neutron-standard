@@ -13,8 +13,7 @@ class LongFunctionSniffTest extends TestCase {
 		$helper = new SniffTestHelper();
 		$phpcsFile = $helper->getTestLocalFile($sniffFile, $fixtureFile);
 		$phpcsFile->process();
-		$foundWarnings = $phpcsFile->getWarnings();
-		$lines = $helper->getLineNumbersFromMessages($foundWarnings);
+		$lines = $helper->getWarningLineNumbersFromFile($phpcsFile);
 		$this->assertEquals([37, 72], $lines);
 	}
 }
