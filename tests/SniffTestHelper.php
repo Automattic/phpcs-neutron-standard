@@ -10,7 +10,6 @@ use PHP_CodeSniffer\Config;
 class SniffTestHelper {
 	public function getTestLocalFile($sniffFiles, string $fixtureFile): LocalFile {
 		$config = new Config();
-		$config->cache = false;
 		$ruleset = new Ruleset($config);
 		if (! is_array($sniffFiles)) {
 			$sniffFiles = [$sniffFiles];
@@ -22,5 +21,13 @@ class SniffTestHelper {
 
 	public function getLineNumbersFromMessages(array $messages): array {
 		return array_keys($messages);
+	}
+
+	public function getWarningLineNumbersFromFile(LocalFile $phpcsFile): array {
+		return $this->getLineNumbersFromMessages($phpcsFile->getWarnings());
+	}
+
+	public function getErrorLineNumbersFromFile(LocalFile $phpcsFile): array {
+		return $this->getLineNumbersFromMessages($phpcsFile->getErrors());
 	}
 }
