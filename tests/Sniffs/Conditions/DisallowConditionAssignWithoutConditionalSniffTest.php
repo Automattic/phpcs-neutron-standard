@@ -10,7 +10,7 @@ class DisallowConditionAssignWithoutConditionalSniffTest extends TestCase {
 		$fixtureFile = __DIR__ . '/fixture.php';
 		$sniffFile = __DIR__ . '/../../../NeutronStandard/Sniffs/Conditions/DisallowConditionAssignWithoutConditionalSniff.php';
 		$helper = new SniffTestHelper();
-		$phpcsFile = $helper->getTestLocalFile($sniffFile, $fixtureFile);
+		$phpcsFile = $helper->prepareLocalFileForSniffs($sniffFile, $fixtureFile);
 		$phpcsFile->process();
 		$lines = $helper->getErrorLineNumbersFromFile($phpcsFile);
 		$this->assertEquals([5, 9], $lines);

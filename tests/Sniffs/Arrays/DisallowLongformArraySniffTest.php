@@ -11,7 +11,7 @@ class DisallowLongformArraySniffTest extends TestCase {
 		$sniffFile = __DIR__ . '/../../../NeutronStandard/Sniffs/Arrays/DisallowLongformArraySniff.php';
 
 		$helper = new SniffTestHelper();
-		$phpcsFile = $helper->getTestLocalFile($sniffFile, $fixtureFile);
+		$phpcsFile = $helper->prepareLocalFileForSniffs($sniffFile, $fixtureFile);
 		$phpcsFile->process();
 		$lines = $helper->getErrorLineNumbersFromFile($phpcsFile);
 		$this->assertEquals([5], $lines);

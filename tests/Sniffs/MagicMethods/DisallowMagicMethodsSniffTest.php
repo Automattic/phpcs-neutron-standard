@@ -14,7 +14,7 @@ class DisallowMagicMethodsSniffTest extends TestCase {
 			__DIR__ . '/../../../NeutronStandard/Sniffs/MagicMethods/DisallowMagicSerializeSniff.php',
 		];
 		$helper = new SniffTestHelper();
-		$phpcsFile = $helper->getTestLocalFile($sniffFiles, $fixtureFile);
+		$phpcsFile = $helper->prepareLocalFileForSniffs($sniffFiles, $fixtureFile);
 		$phpcsFile->process();
 		$lines = $helper->getErrorLineNumbersFromFile($phpcsFile);
 		$this->assertEquals([17, 21, 26], $lines);

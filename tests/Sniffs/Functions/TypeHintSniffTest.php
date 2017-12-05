@@ -11,7 +11,7 @@ class TypeHintSniffTest extends TestCase {
 		$sniffFile = __DIR__ . '/../../../NeutronStandard/Sniffs/Functions/TypeHintSniff.php';
 
 		$helper = new SniffTestHelper();
-		$phpcsFile = $helper->getTestLocalFile($sniffFile, $fixtureFile);
+		$phpcsFile = $helper->prepareLocalFileForSniffs($sniffFile, $fixtureFile);
 		$phpcsFile->process();
 		$lines = $helper->getWarningLineNumbersFromFile($phpcsFile);
 		$this->assertEquals([118, 123, 128, 133], $lines);

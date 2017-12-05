@@ -8,7 +8,7 @@ use PHP_CodeSniffer\Ruleset;
 use PHP_CodeSniffer\Config;
 
 class SniffTestHelper {
-	public function getTestLocalFile($sniffFiles, string $fixtureFile): LocalFile {
+	public function prepareLocalFileForSniffs($sniffFiles, string $fixtureFile): LocalFile {
 		$config = new Config();
 		$ruleset = new Ruleset($config);
 		if (! is_array($sniffFiles)) {
