@@ -22,3 +22,6 @@ cache:
 script:
   - composer install
   - composer test
+
+notifications:
+  email: false
