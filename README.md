@@ -316,3 +316,10 @@ For consistency, if we _do_ need to call a variable function, we might as well u
 
 - `call_user_func($f, $x, $y, $z)` is equal to `$f($x, $y, $z)`
 - `call_user_func_array($f, $args)` is equal to `$f(...$args)`
+
+## Imports
+
+**New code MUST NOT import a class, function, or constant without using that import.**
+
+It's easy when refactoring code to accidentally leave an unused import in a file.
+
