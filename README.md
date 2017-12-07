@@ -274,3 +274,8 @@ When a class is instantiated multiple places, it must have all its dependencies 
 
 Instead, if a single function is used to instantiate a class (typically a static function called a "factory"), then it becomes possible to just make the change in one place. If a new configuration of dependencies is desired, it's possible to just create a new factory.
 
+## Newlines
+
+**New code MUST NOT have more than one adjacent blank line.**
+
+Whitespace is useful for separating logical sections of code, but excess whitespace takes up too much of the screen. One empty line is usually sufficient to separate sections of code.
