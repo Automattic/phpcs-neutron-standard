@@ -290,13 +290,19 @@ Having variable function names prevents easily tracing the usage and definition 
 
 Instead, we can use a mapping function to transform a string into a hard-coded function call. For example, here are three ways to call the function stored in `$myFunction`; notice how the third option actually has the function name in the code where it is called.
 
+This one uses `call_user_func`.
+
 ```php
 call_user_func($myFunction, 'hello');
 ```
 
+The next one uses the new syntax.
+
 ```php
 $myFunction('hello');
 ```
+
+The following version actually does not call a variable function at all.
 
 ```php
 switch($myFunction) {
@@ -305,3 +311,8 @@ switch($myFunction) {
     break;
 }
 ```
+
+For consistency, if we _do_ need to call a variable function, we might as well use the newer version of the syntax.
+
+- `call_user_func($f, $x, $y, $z)` is equal to `$f($x, $y, $z)`
+- `call_user_func_array($f, $args)` is equal to `$f(...$args)`
