@@ -19,3 +19,4 @@ new Classname();
 new AnotherClass();
 functionName();
 anotherFunction(MY_CONST);
+anotherFunction('UNUSED_CONST');
