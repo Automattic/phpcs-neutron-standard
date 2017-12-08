@@ -14,6 +14,7 @@ use function My\Full\unusedFunctionNameTwo as anotherUnusedFunction;
 use const My\Full\MY_CONST;
 // The following line should report an unused import
 use const My\Full\UNUSED_CONST;
+// The following line should report an unused import
 use First;
 // The following line should report an unused import
 use Second;
