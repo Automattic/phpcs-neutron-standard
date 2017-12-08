@@ -20,12 +20,16 @@ class TypeHintSniff implements Sniff {
 		$tokens = $phpcsFile->getTokens();
 		$openParenPtr = $tokens[$stackPtr]['parenthesis_opener'];
 		$closeParenPtr = $tokens[$stackPtr]['parenthesis_closer'];
+		$hintTypes = [
+			T_STRING,
+			T_ARRAY_HINT,
+		];
 
 		for ($i = ($openParenPtr + 1); $i < $closeParenPtr; $i++) {
 			if ($tokens[$i]['code'] === T_VARIABLE) {
 				$tokenBeforePtr = $phpcsFile->findPrevious(T_WHITESPACE, $i - 1, $openParenPtr, true);
 				$tokenBefore = $tokens[$tokenBeforePtr];
-				if (! $tokenBeforePtr || $tokenBefore['code'] !== T_STRING) {
+				if (! $tokenBeforePtr || ! in_array($tokenBefore['code'], $hintTypes, true)) {
 					$error = 'Argument type is missing';
 					$phpcsFile->addWarning($error, $stackPtr, 'NoArgumentType');
 				}

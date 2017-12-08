@@ -142,4 +142,20 @@ class MyClass {
 	public function hasHints(string $arg1): MyClass {
 		return new MyClass($arg1);
 	}
+
+	public function hasHintsWithArray(array $arg1): MyClass {
+		return new MyClass($arg1);
+	}
+
+	public function hasHintsWithInt(int $arg1): MyClass {
+		return new MyClass($arg1);
+	}
+
+	public function hasHintsWithBool(bool $arg1): MyClass {
+		return new MyClass($arg1);
+	}
+
+	public function hasHintsWithClass(MyClass $arg1): MyClass {
+		return new MyClass($arg1);
+	}
 }
