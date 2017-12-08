@@ -279,3 +279,40 @@ Instead, if a single function is used to instantiate a class (typically a static
 **New code MUST NOT have more than one adjacent blank line.**
 
 Whitespace is useful for separating logical sections of code, but excess whitespace takes up too much of the screen. One empty line is usually sufficient to separate sections of code.
+
+## Variable Functions
+
+**New code SHOULD NOT call Variable Functions.**
+
+**New code MUST NOT use call_user_func or call_user_func_array.**
+
+Having variable function names prevents easily tracing the usage and definition of a function. If a function signature needs to be changed or removed, for example, a developer would typically search the code base for uses of that function name. With variable functions, a function name could be created by joining strings together or otherwise manipulating a string, making it nearly impossible to find that use. Even if the string is unmodified, it may be defined somewhere far away from the place where it is called, again making it hard to trace its use. Lastly, with a function name as a string, it's possible for the string to be accidentally modified or to be set to something unexpected, potentially causing a fatal error.
+
+Instead, we can use a mapping function to transform a string into a hard-coded function call. For example, here are three ways to call the function stored in `$myFunction`; notice how the third option actually has the function name in the code where it is called.
+
+This one uses `call_user_func`.
+
+```php
+call_user_func($myFunction, 'hello');
+```
+
+The next one uses the new syntax.
+
+```php
+$myFunction('hello');
+```
+
+The following version actually does not call a variable function at all.
+
+```php
+switch($myFunction) {
+  case 'speak':
+    speak('hello');
+    break;
+}
+```
+
+For consistency, if we _do_ need to call a variable function, we might as well use the newer version of the syntax.
+
+- `call_user_func($f, $x, $y, $z)` is equal to `$f($x, $y, $z)`
+- `call_user_func_array($f, $args)` is equal to `$f(...$args)`
