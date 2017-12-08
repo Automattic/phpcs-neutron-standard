@@ -14,9 +14,13 @@ use function My\Full\unusedFunctionNameTwo as anotherUnusedFunction;
 use const My\Full\MY_CONST;
 // The following line should report an unused import
 use const My\Full\UNUSED_CONST;
+use First;
+// The following line should report an unused import
+use Second;
 
 new Classname();
 new AnotherClass();
 functionName();
 anotherFunction(MY_CONST);
 anotherFunction('UNUSED_CONST');
+new \Third\Second\First();

@@ -13,6 +13,6 @@ class DisallowUnusedImportSniffTest extends TestCase {
 		$phpcsFile = $helper->prepareLocalFileForSniffs($sniffFile, $fixtureFile);
 		$phpcsFile->process();
 		$lines = $helper->getErrorLineNumbersFromFile($phpcsFile);
-		$this->assertEquals([5, 7, 11, 13, 16], $lines);
+		$this->assertEquals([5, 7, 11, 13, 16, 19], $lines);
 	}
 }
