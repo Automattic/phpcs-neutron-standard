@@ -44,7 +44,7 @@ We allow the possibility of legitimate use-cases of the "callable" magic methods
 
 Global functions risk causing namespace collisions, and thus require explicit namespacing in the function name itself. Since the language supports namespaces for organization, we can use them to increase readability and reduce that risk.
 
-The remaining advantage of global functions is portability across a wide codebase that may require versions of PHP which did not support namespaces. This should not be an issue for payments code since its public API should be only used by non-Jetpack methods or over HTTP.
+The remaining advantage of global functions is portability across a wide codebase that may require versions of PHP which did not support namespaces. This should not be an issue for new code.
 
 ## Static methods
 
