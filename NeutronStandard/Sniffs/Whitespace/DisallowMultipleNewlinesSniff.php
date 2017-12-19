@@ -25,7 +25,7 @@ class DisallowMultipleNewlinesSniff implements Sniff {
 		if ($tokens[$stackPtr - 2]['content'] !== "\n") {
 			return;
 		}
-		$error = 'Multiple newlines are no allowed';
+		$error = 'Multiple adjacent blank lines are not allowed';
 		$phpcsFile->addError($error, $stackPtr, 'MultipleNewlines');
 	}
 }
