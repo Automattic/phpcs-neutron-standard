@@ -168,16 +168,32 @@ class MyClass {
 		return new MyClass($arg1);
 	}
 
-	public function hasHintsWithArray(array $arg1): MyClass {
-		return new MyClass($arg1);
+	public function hasHintsWithArray(array $arg1): array {
+		return [$arg1];
 	}
 
-	public function hasHintsWithInt(int $arg1): MyClass {
-		return new MyClass($arg1);
+	public function hasHintsWithInt(int $arg1): int {
+		return $arg1;
 	}
 
-	public function hasHintsWithBool(bool $arg1): MyClass {
-		return new MyClass($arg1);
+	public function hasHintsWithBool(bool $arg1): bool {
+		return $arg1 && true;
+	}
+
+	public function hasHintsWithSelf(self $arg1): self {
+		return $arg1;
+	}
+
+	public function hasHintsWithCallable(callable $arg1): callable {
+		return $arg1;
+	}
+
+	public function hasHintsWithIterable(iterable $arg1): iterable {
+		return [$arg1];
+	}
+
+	public function hasHintsWithFloat(float $arg1): float {
+		return $arg1;
 	}
 
 	public function hasHintsWithClass(MyClass $arg1): MyClass {

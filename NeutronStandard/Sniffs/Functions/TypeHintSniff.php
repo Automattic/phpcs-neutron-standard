@@ -23,6 +23,8 @@ class TypeHintSniff implements Sniff {
 		$hintTypes = [
 			T_STRING,
 			T_ARRAY_HINT,
+			T_CALLABLE,
+			T_SELF,
 		];
 
 		for ($i = ($openParenPtr + 1); $i < $closeParenPtr; $i++) {
