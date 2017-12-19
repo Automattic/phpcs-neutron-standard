@@ -78,18 +78,6 @@ vendor/bin/phpcs -s src/MyProject/MyClass.php
 
 The key words "MUST", "MUST NOT", "SHOULD", "SHOULD NOT", and "MAY" in this document are to be interpreted as described in [RFC 2119](https://www.ietf.org/rfc/rfc2119.txt).
 
-## Linting
-
-**New PHP files MUST pass a linter (ruleset to be determined) before being committed. Linting exceptions are allowed, but should be explicitly stated using linter comments.**
-
-**New code in existing PHP files MUST pass a linter (ruleset to be determined) before being committed. Linting exceptions are allowed, but should be explicitly stated using linter comments.**
-
-**Existing code MAY break linter rules.**
-
-Because [the WordPress coding standards use phpcs](https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards), we suggest using [phpcs](https://github.com/squizlabs/PHP_CodeSniffer) for this purpose.
-
-Groups of phpcs standards can be easily installed on a project by using [composer](https://getcomposer.org/) and [phpcodesniffer-composer-installer](https://github.com/DealerDirect/phpcodesniffer-composer-installer).
-
 ## Strict types
 
 **New PHP files MUST include a strict types directive.**
