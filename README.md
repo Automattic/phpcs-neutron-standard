@@ -15,52 +15,22 @@ composer require --dev squizlabs/php_codesniffer dealerdirect/phpcodesniffer-com
 composer require --dev automattic/phpcs-neutron-standard
 ```
 
-If you want the WordPress standard as well, it can be installed as follows.
+If you want this standard, the WordPress standard, the VariableAnalysis standard, and other customizations, you can install the meta-standard [NeutronRuleset](https://github.com/Automattic/phpcs-neutron-ruleset) instead.
 
 ```
-composer require --dev wp-coding-standards/wpcs
-```
-
-We also highly recommend the [VariableAnalysis](https://href.li/?https://github.com/sirbrillig/phpcs-variable-analysis) standard which looks for undefined and unused variables.
-
-```
-composer require --dev sirbrillig/phpcs-variable-analysis
+composer require --dev squizlabs/php_codesniffer dealerdirect/phpcodesniffer-composer-installer
+composer require --dev automattic/phpcs-neutron-ruleset
 ```
 
 ## Configuration
 
 When installing sniff standards in a project, you edit a `phpcs.xml` file with the `rule` tag inside the `ruleset` tag. The `ref` attribute of that tag should specify a standard, category, sniff, or error code to enable. It’s also possible to use these tags to disable or modify certain rules. The [official annotated file](https://href.li/?https://github.com/squizlabs/PHP_CodeSniffer/wiki/Annotated-ruleset.xml) explains how to do this.
 
-The following configuration will enable all the sniffs in NeutronStandard, VariableAnalysis, and WordPress. It will also disable several WordPress rules which conflict with, or are not preferred by, this standard.
-
 ```xml
 <?xml version="1.0"?>
 <ruleset name="MyStandard">
  <description>My library.</description>
- <rule ref="VariableAnalysis"/>
  <rule ref="NeutronStandard"/>
- <rule ref="WordPress"/>
- <rule ref="Squiz.Commenting">
-	 <severity>0</severity>
- </rule>
- <rule ref="WordPress.Files.FileName">
-	 <severity>0</severity>
- </rule>
- <rule ref="WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid">
-	 <severity>0</severity>
- </rule>
- <rule ref="WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned">
-	 <severity>0</severity>
- </rule>
- <rule ref="Generic.Formatting.MultipleStatementAlignment.NotSameWarning">
- 	<severity>0</severity>
- </rule>
- <rule ref="Generic.Commenting.DocComment.MissingShort">
- 	<severity>0</severity>
- </rule>
- <rule ref="WordPress.PHP.YodaConditions.NotYoda">
- 	<severity>0</severity>
- </rule>
 </ruleset>
 ```
 
