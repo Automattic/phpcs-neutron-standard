@@ -30,4 +30,10 @@ class SniffTestHelper {
 	public function getErrorLineNumbersFromFile(LocalFile $phpcsFile): array {
 		return $this->getLineNumbersFromMessages($phpcsFile->getErrors());
 	}
+
+	public function getFixedFileContents(LocalFile $phpcsFile) {
+		$phpcsFile->fixer->startFile($phpcsFile);
+		$phpcsFile->fixer->fixFile();
+		return $phpcsFile->fixer->getContents();
+	}
 }
