@@ -70,6 +70,10 @@ class TypeHintSniff implements Sniff {
 			$error = 'Return type is missing';
 			$phpcsFile->addWarning($error, $stackPtr, 'NoReturnType');
 		}
+		if ($foundReturn && $returnTypePtr && $returnType['content'] === 'void') {
+			$error = 'Void return type when returning non-void';
+			$phpcsFile->addWarning($error, $stackPtr, 'IncorrectVoidReturnType');
+		}
 	}
 
 	private function getNextNonWhitespace(File $phpcsFile, $stackPtr) {
