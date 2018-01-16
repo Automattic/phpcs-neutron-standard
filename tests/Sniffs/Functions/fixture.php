@@ -213,12 +213,12 @@ class MyClass {
 	}
 
 	// The next line should report an invalid return type
-	// public function hasBoolReturnAndVoidHint(): void {
-		// return false;
-	// }
+	public function hasBoolReturnAndVoidHint(): void {
+		return false;
+	}
 
 	// The next line should report an invalid return type
-	// public function hasNullReturnAndVoidHint(): void {
-		// return null;
-	// }
+	public function hasNullReturnAndVoidHint(): void {
+		return null;
+	}
 }
