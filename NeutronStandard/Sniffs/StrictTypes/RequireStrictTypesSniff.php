@@ -11,7 +11,9 @@ class RequireStrictTypesSniff implements Sniff {
 	}
 
 	public function process(File $phpcsFile, $stackPtr) {
-		if (! $this->isFirstOpenTag($phpcsFile, $stackPtr)) {
+		if (! $this->isFirstOpenTag($phpcsFile, $stackPtr)
+			|| $this->isFileOnlyAnInterface($phpcsFile, $stackPtr)
+		) {
 			return;
 		}
 		$declarePtr = $this->getNextDeclarePtr($phpcsFile, $stackPtr);
@@ -26,6 +28,36 @@ class RequireStrictTypesSniff implements Sniff {
 	private function isFirstOpenTag(File $phpcsFile, $stackPtr): bool {
 		$previousOpenTagPtr = $phpcsFile->findPrevious(T_OPEN_TAG, $stackPtr);
 		return ! $previousOpenTagPtr;
+	}
+
+	private function isFileOnlyAnInterface(File $phpcsFile, $stackPtr): bool {
+		$interfacePtr = $phpcsFile->findNext(T_INTERFACE, $stackPtr);
+		if (! $interfacePtr) {
+			return false;
+		}
+		$tokens = $phpcsFile->getTokens();
+		$ignoredTokenTypes = [
+			T_WHITESPACE,
+		];
+		for ($ptr = ($stackPtr + 1); isset($tokens[$ptr]); $ptr++) {
+			$token = $tokens[$ptr];
+			if ($token['level'] > 0) {
+				continue;
+			}
+			if ($token['code'] === T_INTERFACE) {
+				$ptr = $this->getEndOfBlockPtr($phpcsFile, $ptr);
+				continue;
+			}
+			if (! in_array($token['code'], $ignoredTokenTypes)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private function getEndOfBlockPtr(File $phpcsFile, $stackPtr) {
+		$tokens = $phpcsFile->getTokens();
+		return $tokens[$stackPtr]['scope_closer'];
 	}
 
 	private function isDeclareStrictTypes(File $phpcsFile, $declarePtr): bool {
