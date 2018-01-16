@@ -199,4 +199,26 @@ class MyClass {
 	public function hasHintsWithClass(MyClass $arg1): MyClass {
 		return new MyClass($arg1);
 	}
+
+	public function hasVoidReturnAndNoHint() {
+		return;
+	}
+
+	public function hasVoidReturnAndVoidHint(): void {
+		return;
+	}
+
+	public function hasNoReturnAndVoidHint(): void {
+		'something';
+	}
+
+	// The next line should report an invalid return type
+	public function hasBoolReturnAndVoidHint(): void {
+		return false;
+	}
+
+	// The next line should report an invalid return type
+	public function hasNullReturnAndVoidHint(): void {
+		return null;
+	}
 }
