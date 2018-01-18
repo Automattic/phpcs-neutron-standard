@@ -25,6 +25,6 @@ class TypeHintSniffTest extends TestCase {
 		$phpcsFile = $helper->prepareLocalFileForSniffs($sniffFile, $fixtureFile);
 		$phpcsFile->process();
 		$lines = $helper->getWarningLineNumbersFromFile($phpcsFile);
-		$this->assertEquals([10], $lines);
+		$this->assertEquals([10, 19, 24, 29], $lines);
 	}
 }
