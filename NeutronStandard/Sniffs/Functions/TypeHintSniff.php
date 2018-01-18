@@ -27,9 +27,9 @@ class TypeHintSniff implements Sniff {
 			T_SELF,
 		];
 
-		for ($i = ($openParenPtr + 1); $i < $closeParenPtr; $i++) {
-			if ($tokens[$i]['code'] === T_VARIABLE) {
-				$tokenBeforePtr = $phpcsFile->findPrevious(T_WHITESPACE, $i - 1, $openParenPtr, true);
+		for ($ptr = ($openParenPtr + 1); $ptr < $closeParenPtr; $ptr++) {
+			if ($tokens[$ptr]['code'] === T_VARIABLE) {
+				$tokenBeforePtr = $this->getArgumentTypePtr($phpcsFile, $ptr);
 				$tokenBefore = $tokens[$tokenBeforePtr];
 				if (! $tokenBeforePtr || ! in_array($tokenBefore['code'], $hintTypes, true)) {
 					$error = 'Argument type is missing';
@@ -80,6 +80,18 @@ class TypeHintSniff implements Sniff {
 		$tokens = $phpcsFile->getTokens();
 		$nextNonWhitespacePtr = $phpcsFile->findNext(T_WHITESPACE, $stackPtr + 1, null, true, null, true);
 		return $nextNonWhitespacePtr ? $tokens[$nextNonWhitespacePtr] : null;
+	}
+
+	private function getArgumentTypePtr(File $phpcsFile, $stackPtr) {
+		$ignoredTypes = [
+			T_WHITESPACE,
+			T_ELLIPSIS,
+		];
+		$openParenPtr = $phpcsFile->findPrevious(T_OPEN_PARENTHESIS, $stackPtr - 1, null, false);
+		if (! $openParenPtr) {
+			return false;
+		}
+		return $phpcsFile->findPrevious($ignoredTypes, $stackPtr - 1, $openParenPtr, true);
 	}
 
 	private function isReturnValueVoid(File $phpcsFile, $stackPtr) {
