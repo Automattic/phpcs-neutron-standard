@@ -24,4 +24,7 @@ interface SettingsPageAuthInterface {
 	 * @return string
 	 */
 	public function cap(): string;
+
+	// Some things
+	public function someThings();
 }
