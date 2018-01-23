@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 class DisallowMagicMethodsSniffTest extends TestCase {
 	public function testDisallowMagicMethodsSniffs() {
-		$fixtureFile = __DIR__ . '/fixture.php';
+		$fixtureFile = __DIR__ . '/MagicMethodsFixture.php';
 		$sniffFiles = [
 			__DIR__ . '/../../../NeutronStandard/Sniffs/MagicMethods/DisallowMagicGetSniff.php',
 			__DIR__ . '/../../../NeutronStandard/Sniffs/MagicMethods/DisallowMagicSetSniff.php',

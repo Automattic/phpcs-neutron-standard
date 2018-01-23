@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 class DisallowLongformArraySniffTest extends TestCase {
 	public function testDisallowLongformArraySniff() {
-		$fixtureFile = __DIR__ . '/fixture.php';
+		$fixtureFile = __DIR__ . '/ArraysFixture.php';
 		$sniffFile = __DIR__ . '/../../../NeutronStandard/Sniffs/Arrays/DisallowLongformArraySniff.php';
 
 		$helper = new SniffTestHelper();
@@ -18,7 +18,7 @@ class DisallowLongformArraySniffTest extends TestCase {
 	}
 
 	public function testFixDisallowLongFormArraySniff() {
-		$fixtureFile = __DIR__ . '/fixture.php';
+		$fixtureFile = __DIR__ . '/ArraysFixture.php';
 		$fixedFixtureFile = __DIR__ . '/fixedLongFormArrayFixture.php';
 		$sniffFile = __DIR__ . '/../../../NeutronStandard/Sniffs/Arrays/DisallowLongformArraySniff.php';
 
