@@ -12,6 +12,7 @@ class TypeHintSniff implements Sniff {
 	}
 
 	public function process(File $phpcsFile, $stackPtr) {
+		$this->helper = new SniffHelpers();
 		$this->checkForMissingArgumentHints($phpcsFile, $stackPtr);
 		$this->checkForMissingReturnHints($phpcsFile, $stackPtr);
 	}
@@ -29,7 +30,7 @@ class TypeHintSniff implements Sniff {
 
 		for ($ptr = ($openParenPtr + 1); $ptr < $closeParenPtr; $ptr++) {
 			if ($tokens[$ptr]['code'] === T_VARIABLE) {
-				$tokenBeforePtr = $this->getArgumentTypePtr($phpcsFile, $ptr);
+				$tokenBeforePtr = $this->helper->getArgumentTypePtr($phpcsFile, $ptr);
 				$tokenBefore = $tokens[$tokenBeforePtr];
 				if (! $tokenBeforePtr || ! in_array($tokenBefore['code'], $hintTypes, true)) {
 					$error = 'Argument type is missing';
@@ -41,15 +42,14 @@ class TypeHintSniff implements Sniff {
 
 	private function checkForMissingReturnHints(File $phpcsFile, $stackPtr) {
 		$tokens = $phpcsFile->getTokens();
-		$closeParenPtr = $tokens[$stackPtr]['parenthesis_closer'];
-		$nextBracketPtr = $phpcsFile->findNext(T_OPEN_CURLY_BRACKET, $stackPtr + 1);
-		$endOfFunctionPtr = $tokens[$nextBracketPtr]['bracket_closer'];
-		$returnTypePtr = $phpcsFile->findNext(T_RETURN_TYPE, $closeParenPtr + 1, $nextBracketPtr);
+		$endOfFunctionPtr = $this->helper->getEndOfFunctionPtr($phpcsFile, $stackPtr);
+		$startOfFunctionPtr = $this->helper->getStartOfFunctionPtr($phpcsFile, $stackPtr);
+		$returnTypePtr = $this->helper->getNextReturnTypePtr($phpcsFile, $stackPtr);
 		$returnType = $tokens[$returnTypePtr];
 
 		$foundReturn = false;
 		$scopeClosers = [];
-		for ($ptr = $nextBracketPtr + 1; $ptr < $endOfFunctionPtr; $ptr++) {
+		for ($ptr = $startOfFunctionPtr; $ptr < $endOfFunctionPtr; $ptr++) {
 			$token = $tokens[$ptr];
 			if (! empty($scopeClosers) && $ptr === $scopeClosers[0]) {
 				array_shift($scopeClosers);
@@ -57,7 +57,8 @@ class TypeHintSniff implements Sniff {
 			if ($token['code'] === T_CLOSURE) {
 				array_unshift($scopeClosers, $token['scope_closer']);
 			}
-			if (empty($scopeClosers) && $token['code'] === T_RETURN && ! $this->isReturnValueVoid($phpcsFile, $ptr)) {
+			if (empty($scopeClosers) && $token['code'] === T_RETURN
+				&& ! $this->helper->isReturnValueVoid($phpcsFile, $ptr)) {
 				$foundReturn = true;
 			}
 		}
@@ -74,32 +75,5 @@ class TypeHintSniff implements Sniff {
 			$error = 'Void return type when returning non-void';
 			$phpcsFile->addWarning($error, $stackPtr, 'IncorrectVoidReturnType');
 		}
-	}
-
-	private function getNextNonWhitespace(File $phpcsFile, $stackPtr) {
-		$tokens = $phpcsFile->getTokens();
-		$nextNonWhitespacePtr = $phpcsFile->findNext(T_WHITESPACE, $stackPtr + 1, null, true, null, true);
-		return $nextNonWhitespacePtr ? $tokens[$nextNonWhitespacePtr] : null;
-	}
-
-	private function getArgumentTypePtr(File $phpcsFile, $stackPtr) {
-		$ignoredTypes = [
-			T_WHITESPACE,
-			T_ELLIPSIS,
-		];
-		$openParenPtr = $phpcsFile->findPrevious(T_OPEN_PARENTHESIS, $stackPtr - 1, null, false);
-		if (! $openParenPtr) {
-			return false;
-		}
-		return $phpcsFile->findPrevious($ignoredTypes, $stackPtr - 1, $openParenPtr, true);
-	}
-
-	private function isReturnValueVoid(File $phpcsFile, $stackPtr) {
-		$tokens = $phpcsFile->getTokens();
-		if ($tokens[$stackPtr]['code'] !== T_RETURN) {
-			return false;
-		}
-		$returnValue = $this->getNextNonWhitespace($phpcsFile, $stackPtr);
-		return ! ($returnValue && $returnValue['content'] && $returnValue['code'] !== 'PHPCS_T_SEMICOLON');
 	}
 }
