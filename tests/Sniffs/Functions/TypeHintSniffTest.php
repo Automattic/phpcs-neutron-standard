@@ -14,7 +14,7 @@ class TypeHintSniffTest extends TestCase {
 		$phpcsFile = $helper->prepareLocalFileForSniffs($sniffFile, $fixtureFile);
 		$phpcsFile->process();
 		$lines = $helper->getWarningLineNumbersFromFile($phpcsFile);
-		$this->assertEquals([118, 123, 128, 133, 139, 145, 159, 216, 221], $lines);
+		$this->assertEquals([118, 123, 128, 133, 138, 195, 200], $lines);
 	}
 
 	public function testTypeHintSniffWithVariadicArgs() {
@@ -26,5 +26,16 @@ class TypeHintSniffTest extends TestCase {
 		$phpcsFile->process();
 		$lines = $helper->getWarningLineNumbersFromFile($phpcsFile);
 		$this->assertEquals([10, 19, 24, 29], $lines);
+	}
+
+	public function testTypeHintSniffWithClosures() {
+		$fixtureFile = __DIR__ . '/ClosureFixture.php';
+		$sniffFile = __DIR__ . '/../../../NeutronStandard/Sniffs/Functions/TypeHintSniff.php';
+
+		$helper = new SniffTestHelper();
+		$phpcsFile = $helper->prepareLocalFileForSniffs($sniffFile, $fixtureFile);
+		$phpcsFile->process();
+		$lines = $helper->getWarningLineNumbersFromFile($phpcsFile);
+		$this->assertEquals([5, 11], $lines);
 	}
 }

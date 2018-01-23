@@ -12,10 +12,10 @@ class LongFunctionSniff implements Sniff {
 	}
 
 	public function process(File $phpcsFile, $stackPtr) {
+		$helper = new SniffHelpers();
 		$tokens = $phpcsFile->getTokens();
-		$nextBracketPtr = $phpcsFile->findNext(T_OPEN_CURLY_BRACKET, $stackPtr + 1);
-		$startOfFunctionPtr = $tokens[$nextBracketPtr]['bracket_opener'];
-		$endOfFunctionPtr = $tokens[$nextBracketPtr]['bracket_closer'];
+		$startOfFunctionPtr = $helper->getStartOfFunctionPtr($phpcsFile, $stackPtr);
+		$endOfFunctionPtr = $helper->getEndOfFunctionPtr($phpcsFile, $stackPtr);
 		$newlineCount = 0;
 		$commentTokens = [
 			T_DOC_COMMENT_OPEN_TAG,
@@ -29,7 +29,6 @@ class LongFunctionSniff implements Sniff {
 			T_WHITESPACE,
 			T_COMMENT,
 		];
-		$helper = new SniffHelpers();
 		$currentLinePtr = $phpcsFile->findNext(T_WHITESPACE, $startOfFunctionPtr, $endOfFunctionPtr, false, "\n") + 2;
 		$foundNonComment = false;
 		for ($index = $currentLinePtr; $index < $endOfFunctionPtr; $index++) {
