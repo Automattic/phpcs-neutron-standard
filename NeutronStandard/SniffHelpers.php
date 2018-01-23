@@ -59,7 +59,12 @@ class SniffHelpers {
 	}
 
 	public function getNextReturnTypePtr(File $phpcsFile, $stackPtr) {
-		return $phpcsFile->findNext(T_RETURN_TYPE, $stackPtr + 1, null, false, null, true);
+		$startOfFunctionPtr = $this->getStartOfFunctionPtr($phpcsFile, $stackPtr);
+		$colonPtr = $phpcsFile->findNext(T_COLON, $stackPtr, $startOfFunctionPtr);
+		if (! $colonPtr) {
+			return false;
+		}
+		return $phpcsFile->findNext(T_RETURN_TYPE, $colonPtr, $startOfFunctionPtr);
 	}
 
 	public function getNextSemicolonPtr(File $phpcsFile, $stackPtr) {
