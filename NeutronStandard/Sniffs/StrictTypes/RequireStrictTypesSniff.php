@@ -2,6 +2,7 @@
 
 namespace NeutronStandard\Sniffs\StrictTypes;
 
+use NeutronStandard\SniffHelpers;
 use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Files\File;
 
@@ -38,7 +39,17 @@ class RequireStrictTypesSniff implements Sniff {
 		$tokens = $phpcsFile->getTokens();
 		$ignoredTokenTypes = [
 			T_WHITESPACE,
+			T_DOC_COMMENT_OPEN_TAG,
+			T_DOC_COMMENT_WHITESPACE,
+			T_DOC_COMMENT_STAR,
+			T_DOC_COMMENT_STRING,
+			T_DOC_COMMENT_CLOSE_TAG,
 		];
+		$skipExpressionTokenTypes = [
+			T_USE,
+			T_NAMESPACE,
+		];
+		$helper = new SniffHelpers();
 		for ($ptr = ($stackPtr + 1); isset($tokens[$ptr]); $ptr++) {
 			$token = $tokens[$ptr];
 			if ($token['level'] > 0) {
@@ -46,6 +57,10 @@ class RequireStrictTypesSniff implements Sniff {
 			}
 			if ($token['code'] === T_INTERFACE) {
 				$ptr = $this->getEndOfBlockPtr($phpcsFile, $ptr);
+				continue;
+			}
+			if (in_array($token['code'], $skipExpressionTokenTypes)) {
+				$ptr = $helper->getNextSemicolonPtr($phpcsFile, $ptr);
 				continue;
 			}
 			if (! in_array($token['code'], $ignoredTokenTypes)) {
