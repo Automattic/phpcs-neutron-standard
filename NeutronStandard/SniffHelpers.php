@@ -30,4 +30,54 @@ class SniffHelpers {
 		}
 		return substr_compare($string, $test, $strlen - $testlen, $testlen) === 0;
 	}
+
+	public function getNextNonWhitespace(File $phpcsFile, $stackPtr) {
+		$tokens = $phpcsFile->getTokens();
+		$nextNonWhitespacePtr = $phpcsFile->findNext(T_WHITESPACE, $stackPtr + 1, null, true, null, true);
+		return $nextNonWhitespacePtr ? $tokens[$nextNonWhitespacePtr] : null;
+	}
+
+	public function getArgumentTypePtr(File $phpcsFile, $stackPtr) {
+		$ignoredTypes = [
+			T_WHITESPACE,
+			T_ELLIPSIS,
+		];
+		$openParenPtr = $phpcsFile->findPrevious(T_OPEN_PARENTHESIS, $stackPtr - 1, null, false);
+		if (! $openParenPtr) {
+			return false;
+		}
+		return $phpcsFile->findPrevious($ignoredTypes, $stackPtr - 1, $openParenPtr, true);
+	}
+
+	public function isReturnValueVoid(File $phpcsFile, $stackPtr) {
+		$tokens = $phpcsFile->getTokens();
+		if ($tokens[$stackPtr]['code'] !== T_RETURN) {
+			return false;
+		}
+		$returnValue = $this->getNextNonWhitespace($phpcsFile, $stackPtr);
+		return ! ($returnValue && $returnValue['content'] && $returnValue['code'] !== 'PHPCS_T_SEMICOLON');
+	}
+
+	public function getNextReturnTypePtr(File $phpcsFile, $stackPtr) {
+		return $phpcsFile->findNext(T_RETURN_TYPE, $stackPtr + 1, null, false, null, true);
+	}
+
+	public function getNextSemicolonPtr(File $phpcsFile, $stackPtr) {
+		return $phpcsFile->findNext(T_SEMICOLON, $stackPtr + 1);
+	}
+
+	public function getEndOfFunctionPtr(File $phpcsFile, $stackPtr) {
+		$tokens = $phpcsFile->getTokens();
+		$openFunctionBracketPtr = $phpcsFile->findNext(T_OPEN_CURLY_BRACKET, $stackPtr + 1);
+		return $openFunctionBracketPtr
+			? $tokens[$openFunctionBracketPtr]['bracket_closer']
+			: $this->getNextSemicolonPtr($phpcsFile, $stackPtr);
+	}
+
+	public function getStartOfFunctionPtr(File $phpcsFile, $stackPtr) {
+		$openFunctionBracketPtr = $phpcsFile->findNext(T_OPEN_CURLY_BRACKET, $stackPtr + 1);
+		return $openFunctionBracketPtr
+			? $openFunctionBracketPtr + 1
+			: $this->getEndOfFunctionPtr($phpcsFile, $stackPtr);
+	}
 }
