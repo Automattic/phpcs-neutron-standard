@@ -12,7 +12,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
-        "test": "./vendor/bin/phpunit --bootstrap ./tests/bootstrap.php --printer=LimeDeck\\\\Testing\\\\Printer ./tests"
+        "test": "./vendor/bin/phpunit"
     },
     "require": {},
     "require-dev": {
