@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 class DisallowDefineSniffTest extends TestCase {
 	public function testDisallowDefineSniff() {
-		$fixtureFile = __DIR__ . '/fixture.php';
+		$fixtureFile = __DIR__ . '/ConstantsFixture.php';
 		$sniffFile = __DIR__ . '/../../../NeutronStandard/Sniffs/Constants/DisallowDefineSniff.php';
 		$helper = new SniffTestHelper();
 		$phpcsFile = $helper->prepareLocalFileForSniffs($sniffFile, $fixtureFile);

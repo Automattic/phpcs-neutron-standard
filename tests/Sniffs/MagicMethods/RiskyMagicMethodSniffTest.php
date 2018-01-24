@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 class RiskyMagicMethodSniffTest extends TestCase {
 	public function testRiskyMagicMethodsSniff() {
-		$fixtureFile = __DIR__ . '/fixture.php';
+		$fixtureFile = __DIR__ . '/MagicMethodsFixture.php';
 		$sniffFiles = [
 			__DIR__ . '/../../../NeutronStandard/Sniffs/MagicMethods/RiskyMagicMethodSniff.php',
 		];

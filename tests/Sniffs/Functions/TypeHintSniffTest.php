@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 class TypeHintSniffTest extends TestCase {
 	public function testTypeHintSniff() {
-		$fixtureFile = __DIR__ . '/fixture.php';
+		$fixtureFile = __DIR__ . '/FunctionsFixture.php';
 		$sniffFile = __DIR__ . '/../../../NeutronStandard/Sniffs/Functions/TypeHintSniff.php';
 
 		$helper = new SniffTestHelper();
@@ -18,7 +18,7 @@ class TypeHintSniffTest extends TestCase {
 	}
 
 	public function testTypeHintSniffWithVariadicArgs() {
-		$fixtureFile = __DIR__ . '/variadicArgumentsFixture.php';
+		$fixtureFile = __DIR__ . '/VariadicArgumentsFixture.php';
 		$sniffFile = __DIR__ . '/../../../NeutronStandard/Sniffs/Functions/TypeHintSniff.php';
 
 		$helper = new SniffTestHelper();

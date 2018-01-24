@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 class RequireStrictTypesSniffTest extends TestCase {
 	public function testRequireStrictTypesIfMissing() {
-		$fixtureFile = __DIR__ . '/fixture.php';
+		$fixtureFile = __DIR__ . '/StrictTypesFixture.php';
 		$sniffFile = __DIR__ . '/../../../NeutronStandard/Sniffs/StrictTypes/RequireStrictTypesSniff.php';
 
 		$helper = new SniffTestHelper();
@@ -18,7 +18,7 @@ class RequireStrictTypesSniffTest extends TestCase {
 	}
 
 	public function testRequireStrictTypesPassesIfPresentOnNewLine() {
-		$fixtureFile = __DIR__ . '/fixture2.php';
+		$fixtureFile = __DIR__ . '/HasStrictTypesFixture.php';
 		$sniffFile = __DIR__ . '/../../../NeutronStandard/Sniffs/StrictTypes/RequireStrictTypesSniff.php';
 
 		$helper = new SniffTestHelper();
@@ -29,7 +29,7 @@ class RequireStrictTypesSniffTest extends TestCase {
 	}
 
 	public function testRequireStrictTypesPassesIfPresentOnSameLine() {
-		$fixtureFile = __DIR__ . '/fixture3.php';
+		$fixtureFile = __DIR__ . '/OneLineStrictTypesFixture.php';
 		$sniffFile = __DIR__ . '/../../../NeutronStandard/Sniffs/StrictTypes/RequireStrictTypesSniff.php';
 
 		$helper = new SniffTestHelper();
@@ -40,7 +40,7 @@ class RequireStrictTypesSniffTest extends TestCase {
 	}
 
 	public function testRequireStrictTypesOnlyIncludesFirstOpenTag() {
-		$fixtureFile = __DIR__ . '/multipleOpenTagsFixture.php';
+		$fixtureFile = __DIR__ . '/MultipleOpenTagsFixture.php';
 		$sniffFile = __DIR__ . '/../../../NeutronStandard/Sniffs/StrictTypes/RequireStrictTypesSniff.php';
 
 		$helper = new SniffTestHelper();
@@ -51,7 +51,7 @@ class RequireStrictTypesSniffTest extends TestCase {
 	}
 
 	public function testRequireStrictTypesIgnoresInterfaceFiles() {
-		$fixtureFile = __DIR__ . '/interfaceOnlyFixture.php';
+		$fixtureFile = __DIR__ . '/InterfaceOnlyFixture.php';
 		$sniffFile = __DIR__ . '/../../../NeutronStandard/Sniffs/StrictTypes/RequireStrictTypesSniff.php';
 
 		$helper = new SniffTestHelper();
@@ -62,7 +62,7 @@ class RequireStrictTypesSniffTest extends TestCase {
 	}
 
 	public function testRequireStrictTypesDoesNotIgnoreInterfaceAndClass() {
-		$fixtureFile = __DIR__ . '/interfaceAndClassFixture.php';
+		$fixtureFile = __DIR__ . '/InterfaceAndClassFixture.php';
 		$sniffFile = __DIR__ . '/../../../NeutronStandard/Sniffs/StrictTypes/RequireStrictTypesSniff.php';
 
 		$helper = new SniffTestHelper();
