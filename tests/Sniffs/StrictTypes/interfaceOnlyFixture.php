@@ -6,6 +6,7 @@ use Brain\Nonces\NonceInterface;
 
 /**
  * Interface SettingsPageAuthInterface
+ * @package Just\Some\Test\Auth
  */
 interface SettingsPageAuthInterface {
 	/**
