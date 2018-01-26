@@ -13,7 +13,11 @@ class DisallowGlobalFunctionsSniff implements Sniff {
 	public function process(File $phpcsFile, $stackPtr) {
 		$tokens = $phpcsFile->getTokens();
 		$currentToken = $tokens[$stackPtr];
+		$namespaceTokenPtr = $phpcsFile->findPrevious(T_NAMESPACE, $stackPtr);
 		if (! empty($currentToken['conditions'])) {
+			return;
+		}
+		if ($namespaceTokenPtr) {
 			return;
 		}
 		$error = 'Global functions are not allowed';
