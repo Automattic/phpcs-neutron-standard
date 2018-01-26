@@ -200,4 +200,6 @@ class MyClass {
 	public function hasNullReturnAndVoidHint(): void {
 		return null;
 	}
+
+	abstract public function abstractFunctionWithReturn(): int;
 }

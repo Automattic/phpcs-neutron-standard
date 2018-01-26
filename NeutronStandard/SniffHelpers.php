@@ -81,8 +81,21 @@ class SniffHelpers {
 
 	public function getStartOfFunctionPtr(File $phpcsFile, $stackPtr) {
 		$openFunctionBracketPtr = $phpcsFile->findNext(T_OPEN_CURLY_BRACKET, $stackPtr + 1);
+		$nextSemicolonPtr = $this->getNextSemicolonPtr($phpcsFile, $stackPtr);
+		if ($openFunctionBracketPtr && $nextSemicolonPtr && $openFunctionBracketPtr > $nextSemicolonPtr) {
+			return $nextSemicolonPtr;
+		}
 		return $openFunctionBracketPtr
 			? $openFunctionBracketPtr + 1
 			: $this->getEndOfFunctionPtr($phpcsFile, $stackPtr);
+	}
+
+	public function isFunctionJustSignature(File $phpcsFile, $stackPtr) {
+		$openFunctionBracketPtr = $phpcsFile->findNext(T_OPEN_CURLY_BRACKET, $stackPtr + 1);
+		$nextSemicolonPtr = $this->getNextSemicolonPtr($phpcsFile, $stackPtr);
+		if ($openFunctionBracketPtr && $nextSemicolonPtr && $openFunctionBracketPtr > $nextSemicolonPtr) {
+			return true;
+		}
+		return ! $openFunctionBracketPtr;
 	}
 }

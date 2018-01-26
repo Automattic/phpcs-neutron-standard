@@ -42,6 +42,9 @@ class TypeHintSniff implements Sniff {
 
 	private function checkForMissingReturnHints(File $phpcsFile, $stackPtr) {
 		$tokens = $phpcsFile->getTokens();
+		if ($this->helper->isFunctionJustSignature($phpcsFile, $stackPtr)) {
+			return;
+		}
 		$endOfFunctionPtr = $this->helper->getEndOfFunctionPtr($phpcsFile, $stackPtr);
 		$startOfFunctionPtr = $this->helper->getStartOfFunctionPtr($phpcsFile, $stackPtr);
 		$returnTypePtr = $this->helper->getNextReturnTypePtr($phpcsFile, $stackPtr);

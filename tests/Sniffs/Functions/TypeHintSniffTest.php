@@ -38,4 +38,26 @@ class TypeHintSniffTest extends TestCase {
 		$lines = $helper->getWarningLineNumbersFromFile($phpcsFile);
 		$this->assertEquals([5, 11], $lines);
 	}
+
+	public function testTypeHintSniffWithInterface() {
+		$fixtureFile = __DIR__ . '/InterfaceFixture.php';
+		$sniffFile = __DIR__ . '/../../../NeutronStandard/Sniffs/Functions/TypeHintSniff.php';
+
+		$helper = new SniffTestHelper();
+		$phpcsFile = $helper->prepareLocalFileForSniffs($sniffFile, $fixtureFile);
+		$phpcsFile->process();
+		$lines = $helper->getWarningLineNumbersFromFile($phpcsFile);
+		$this->assertEquals([], $lines);
+	}
+
+	public function testTypeHintSniffWithAbstractClass() {
+		$fixtureFile = __DIR__ . '/AbstractClassFixture.php';
+		$sniffFile = __DIR__ . '/../../../NeutronStandard/Sniffs/Functions/TypeHintSniff.php';
+
+		$helper = new SniffTestHelper();
+		$phpcsFile = $helper->prepareLocalFileForSniffs($sniffFile, $fixtureFile);
+		$phpcsFile->process();
+		$lines = $helper->getWarningLineNumbersFromFile($phpcsFile);
+		$this->assertEquals([12], $lines);
+	}
 }
