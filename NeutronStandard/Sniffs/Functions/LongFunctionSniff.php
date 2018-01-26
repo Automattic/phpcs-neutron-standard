@@ -13,6 +13,9 @@ class LongFunctionSniff implements Sniff {
 
 	public function process(File $phpcsFile, $stackPtr) {
 		$helper = new SniffHelpers();
+		if ($helper->isFunctionJustSignature($phpcsFile, $stackPtr)) {
+			return;
+		}
 		$tokens = $phpcsFile->getTokens();
 		$startOfFunctionPtr = $helper->getStartOfFunctionPtr($phpcsFile, $stackPtr);
 		$endOfFunctionPtr = $helper->getEndOfFunctionPtr($phpcsFile, $stackPtr);
