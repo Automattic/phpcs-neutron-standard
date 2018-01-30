@@ -19,7 +19,7 @@ class DisallowLongformArraySniffTest extends TestCase {
 
 	public function testFixDisallowLongFormArraySniff() {
 		$fixtureFile = __DIR__ . '/ArraysFixture.php';
-		$fixedFixtureFile = __DIR__ . '/fixedLongFormArrayFixture.php';
+		$fixedFixtureFile = __DIR__ . '/FixedLongFormArrayFixture.php';
 		$sniffFile = __DIR__ . '/../../../NeutronStandard/Sniffs/Arrays/DisallowLongformArraySniff.php';
 
 		$helper = new SniffTestHelper();
