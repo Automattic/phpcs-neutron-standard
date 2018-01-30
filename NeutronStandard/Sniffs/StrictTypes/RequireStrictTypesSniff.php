@@ -39,6 +39,7 @@ class RequireStrictTypesSniff implements Sniff {
 		$tokens = $phpcsFile->getTokens();
 		$ignoredTokenTypes = [
 			T_WHITESPACE,
+			T_COMMENT,
 		];
 		$skipExpressionTokenTypes = [
 			T_USE,
