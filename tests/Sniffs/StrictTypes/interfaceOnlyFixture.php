@@ -2,6 +2,8 @@
 
 namespace Just\Some\Testing;
 
+# Just a comment
+
 use Brain\Nonces\NonceInterface;
 
 /**
