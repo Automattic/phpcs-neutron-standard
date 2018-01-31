@@ -50,8 +50,8 @@ class TypeHintSniff implements Sniff {
 		$returnTypePtr = $helper->getNextReturnTypePtr($phpcsFile, $stackPtr);
 		$returnType = $tokens[$returnTypePtr];
 
-		$nonVoidReturn = 0;
-		$voidReturn = 0;
+		$nonVoidReturnCount = 0;
+		$voidReturnCount = 0;
 		$scopeClosers = [];
 		for ($ptr = $startOfFunctionPtr; $ptr < $endOfFunctionPtr; $ptr++) {
 			$token = $tokens[$ptr];
@@ -62,27 +62,32 @@ class TypeHintSniff implements Sniff {
 				array_unshift($scopeClosers, $token['scope_closer']);
 			}
 			if (empty($scopeClosers) && $token['code'] === T_RETURN) {
-				$helper->isReturnValueVoid($phpcsFile, $ptr) ? $voidReturn++ : $nonVoidReturn++;
+				$helper->isReturnValueVoid($phpcsFile, $ptr) ? $voidReturnCount++ : $nonVoidReturnCount++;
 			}
 		}
 
-		if ($returnTypePtr && $returnType['content'] !== 'void') {
-			if (!$nonVoidReturn) {
-				$error = 'Return type with no return';
-				$phpcsFile->addError($error, $stackPtr, 'UnusedReturnType');
+		$hasNonVoidReturnType = $returnTypePtr && $returnType['content'] !== 'void';
+		$hasVoidReturnType = $returnTypePtr && $returnType['content'] === 'void';
+		$hasNoReturnType = ! $returnTypePtr;
 
-				return;
-			}
-			if ($voidReturn) {
-				$error = 'Return type with void return';
-				$phpcsFile->addError($error, $stackPtr, 'IncorrectVoidReturn');
-			}
+		if ($hasNonVoidReturnType
+			&& ($nonVoidReturnCount === 0 || $voidReturnCount > 0)
+		) {
+			$errorMessage = $voidReturnCount > 0
+				? 'Return type with void return'
+				: 'Return type with no return';
+
+			$errorType = $voidReturnCount > 0
+				? 'IncorrectVoidReturn'
+				: 'UnusedReturnType';
+
+			$phpcsFile->addError($errorMessage, $stackPtr, $errorType);
 		}
-		if ($nonVoidReturn && !$returnTypePtr) {
+		if ($hasNoReturnType && $nonVoidReturnCount > 0) {
 			$error = 'Return type is missing';
 			$phpcsFile->addWarning($error, $stackPtr, 'NoReturnType');
 		}
-		if ($nonVoidReturn && $returnTypePtr && $returnType['content'] === 'void') {
+		if ($hasVoidReturnType && $nonVoidReturnCount > 0) {
 			$error = 'Void return type when returning non-void';
 			$phpcsFile->addError($error, $stackPtr, 'IncorrectVoidReturnType');
 		}
