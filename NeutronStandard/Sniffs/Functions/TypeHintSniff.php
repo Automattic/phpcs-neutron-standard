@@ -12,12 +12,12 @@ class TypeHintSniff implements Sniff {
 	}
 
 	public function process(File $phpcsFile, $stackPtr) {
-		$this->helper = new SniffHelpers();
-		$this->checkForMissingArgumentHints($phpcsFile, $stackPtr);
-		$this->checkForMissingReturnHints($phpcsFile, $stackPtr);
+		$helper = new SniffHelpers();
+		$this->checkForMissingArgumentHints($phpcsFile, $stackPtr, $helper);
+		$this->checkForMissingReturnHints($phpcsFile, $stackPtr, $helper);
 	}
 
-	private function checkForMissingArgumentHints(File $phpcsFile, $stackPtr) {
+	private function checkForMissingArgumentHints(File $phpcsFile, $stackPtr, SniffHelpers $helper) {
 		$tokens = $phpcsFile->getTokens();
 		$openParenPtr = $tokens[$stackPtr]['parenthesis_opener'];
 		$closeParenPtr = $tokens[$stackPtr]['parenthesis_closer'];
@@ -30,9 +30,9 @@ class TypeHintSniff implements Sniff {
 
 		for ($ptr = ($openParenPtr + 1); $ptr < $closeParenPtr; $ptr++) {
 			if ($tokens[$ptr]['code'] === T_VARIABLE) {
-				$tokenBeforePtr = $this->helper->getArgumentTypePtr($phpcsFile, $ptr);
+				$tokenBeforePtr = $helper->getArgumentTypePtr($phpcsFile, $ptr);
 				$tokenBefore = $tokens[$tokenBeforePtr];
-				if (! $tokenBeforePtr || ! in_array($tokenBefore['code'], $hintTypes, true)) {
+				if (!$tokenBeforePtr || !in_array($tokenBefore['code'], $hintTypes, true)) {
 					$error = 'Argument type is missing';
 					$phpcsFile->addWarning($error, $stackPtr, 'NoArgumentType');
 				}
@@ -40,43 +40,56 @@ class TypeHintSniff implements Sniff {
 		}
 	}
 
-	private function checkForMissingReturnHints(File $phpcsFile, $stackPtr) {
+	private function checkForMissingReturnHints(File $phpcsFile, $stackPtr, SniffHelpers $helper) {
 		$tokens = $phpcsFile->getTokens();
-		if ($this->helper->isFunctionJustSignature($phpcsFile, $stackPtr)) {
+		if ($helper->isFunctionJustSignature($phpcsFile, $stackPtr)) {
 			return;
 		}
-		$endOfFunctionPtr = $this->helper->getEndOfFunctionPtr($phpcsFile, $stackPtr);
-		$startOfFunctionPtr = $this->helper->getStartOfFunctionPtr($phpcsFile, $stackPtr);
-		$returnTypePtr = $this->helper->getNextReturnTypePtr($phpcsFile, $stackPtr);
+		$endOfFunctionPtr = $helper->getEndOfFunctionPtr($phpcsFile, $stackPtr);
+		$startOfFunctionPtr = $helper->getStartOfFunctionPtr($phpcsFile, $stackPtr);
+		$returnTypePtr = $helper->getNextReturnTypePtr($phpcsFile, $stackPtr);
 		$returnType = $tokens[$returnTypePtr];
 
-		$foundReturn = false;
+		$nonVoidReturnCount = 0;
+		$voidReturnCount = 0;
 		$scopeClosers = [];
 		for ($ptr = $startOfFunctionPtr; $ptr < $endOfFunctionPtr; $ptr++) {
 			$token = $tokens[$ptr];
-			if (! empty($scopeClosers) && $ptr === $scopeClosers[0]) {
+			if (!empty($scopeClosers) && $ptr === $scopeClosers[0]) {
 				array_shift($scopeClosers);
 			}
 			if ($token['code'] === T_CLOSURE) {
 				array_unshift($scopeClosers, $token['scope_closer']);
 			}
-			if (empty($scopeClosers) && $token['code'] === T_RETURN
-				&& ! $this->helper->isReturnValueVoid($phpcsFile, $ptr)) {
-				$foundReturn = true;
+			if (empty($scopeClosers) && $token['code'] === T_RETURN) {
+				$helper->isReturnValueVoid($phpcsFile, $ptr) ? $voidReturnCount++ : $nonVoidReturnCount++;
 			}
 		}
 
-		if (! $foundReturn && $returnTypePtr && $returnType['content'] !== 'void') {
-			$error = 'Return type with no return';
-			$phpcsFile->addWarning($error, $stackPtr, 'UnusedReturnType');
+		$hasNonVoidReturnType = $returnTypePtr && $returnType['content'] !== 'void';
+		$hasVoidReturnType = $returnTypePtr && $returnType['content'] === 'void';
+		$hasNoReturnType = ! $returnTypePtr;
+
+		if ($hasNonVoidReturnType
+			&& ($nonVoidReturnCount === 0 || $voidReturnCount > 0)
+		) {
+			$errorMessage = $voidReturnCount > 0
+				? 'Return type with void return'
+				: 'Return type with no return';
+
+			$errorType = $voidReturnCount > 0
+				? 'IncorrectVoidReturn'
+				: 'UnusedReturnType';
+
+			$phpcsFile->addError($errorMessage, $stackPtr, $errorType);
 		}
-		if ($foundReturn && ! $returnTypePtr) {
+		if ($hasNoReturnType && $nonVoidReturnCount > 0) {
 			$error = 'Return type is missing';
 			$phpcsFile->addWarning($error, $stackPtr, 'NoReturnType');
 		}
-		if ($foundReturn && $returnTypePtr && $returnType['content'] === 'void') {
+		if ($hasVoidReturnType && $nonVoidReturnCount > 0) {
 			$error = 'Void return type when returning non-void';
-			$phpcsFile->addWarning($error, $stackPtr, 'IncorrectVoidReturnType');
+			$phpcsFile->addError($error, $stackPtr, 'IncorrectVoidReturnType');
 		}
 	}
 }

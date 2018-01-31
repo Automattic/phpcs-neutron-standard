@@ -55,7 +55,7 @@ class SniffHelpers {
 			return false;
 		}
 		$returnValue = $this->getNextNonWhitespace($phpcsFile, $stackPtr);
-		return ! ($returnValue && $returnValue['content'] && $returnValue['code'] !== 'PHPCS_T_SEMICOLON');
+		return ! $returnValue || $returnValue['code'] === 'PHPCS_T_SEMICOLON';
 	}
 
 	public function getNextReturnTypePtr(File $phpcsFile, $stackPtr) {
