@@ -73,9 +73,7 @@ class MyClass {
 		if ($actual = $this->getActual()) {
 			echo $actual;
 		}
-		if (
-			$actual = $this->getActual()
-		) {
+		if ($actual = $this->getActual()) {
 			echo $actual;
 		}
 		if ($actual = $this->getActual() == true) {
@@ -203,11 +201,11 @@ class MyClass {
 
 	abstract public function abstractFunctionWithReturn(): int;
 
-    // The next line should report an invalid void return
-    public function hasOneVoidReturnAndBoolHint(): bool {
-        if (rand(1, 10) > 5) {
-            return true;
-        }
-        return;
-    }
+	// The next line should report an invalid void return
+	public function hasOneVoidReturnAndBoolHint(): bool {
+		if (rand(1, 10) > 5) {
+			return true;
+		}
+		return;
+	}
 }
