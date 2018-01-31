@@ -70,7 +70,9 @@ class MyClass {
 
 	// Next line should report function too long
 	public function comparisonTest() {
-		if ($actual = $this->getActual()) {
+		if (
+			$actual = $this->getActual()
+		) {
 			echo $actual;
 		}
 		if ($actual = $this->getActual()) {
