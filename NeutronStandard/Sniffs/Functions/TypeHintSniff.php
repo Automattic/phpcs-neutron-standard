@@ -12,12 +12,12 @@ class TypeHintSniff implements Sniff {
 	}
 
 	public function process(File $phpcsFile, $stackPtr) {
-		$this->helper = new SniffHelpers();
-		$this->checkForMissingArgumentHints($phpcsFile, $stackPtr);
-		$this->checkForMissingReturnHints($phpcsFile, $stackPtr);
+		$helper = new SniffHelpers();
+		$this->checkForMissingArgumentHints($phpcsFile, $stackPtr, $helper);
+		$this->checkForMissingReturnHints($phpcsFile, $stackPtr, $helper);
 	}
 
-	private function checkForMissingArgumentHints(File $phpcsFile, $stackPtr) {
+	private function checkForMissingArgumentHints(File $phpcsFile, $stackPtr, SniffHelpers $helper) {
 		$tokens = $phpcsFile->getTokens();
 		$openParenPtr = $tokens[$stackPtr]['parenthesis_opener'];
 		$closeParenPtr = $tokens[$stackPtr]['parenthesis_closer'];
@@ -30,7 +30,7 @@ class TypeHintSniff implements Sniff {
 
 		for ($ptr = ($openParenPtr + 1); $ptr < $closeParenPtr; $ptr++) {
 			if ($tokens[$ptr]['code'] === T_VARIABLE) {
-				$tokenBeforePtr = $this->helper->getArgumentTypePtr($phpcsFile, $ptr);
+				$tokenBeforePtr = $helper->getArgumentTypePtr($phpcsFile, $ptr);
 				$tokenBefore = $tokens[$tokenBeforePtr];
 				if (! $tokenBeforePtr || ! in_array($tokenBefore['code'], $hintTypes, true)) {
 					$error = 'Argument type is missing';
@@ -40,17 +40,18 @@ class TypeHintSniff implements Sniff {
 		}
 	}
 
-	private function checkForMissingReturnHints(File $phpcsFile, $stackPtr) {
+	private function checkForMissingReturnHints(File $phpcsFile, $stackPtr, SniffHelpers $helper) {
 		$tokens = $phpcsFile->getTokens();
-		if ($this->helper->isFunctionJustSignature($phpcsFile, $stackPtr)) {
+		if ($helper->isFunctionJustSignature($phpcsFile, $stackPtr)) {
 			return;
 		}
-		$endOfFunctionPtr = $this->helper->getEndOfFunctionPtr($phpcsFile, $stackPtr);
-		$startOfFunctionPtr = $this->helper->getStartOfFunctionPtr($phpcsFile, $stackPtr);
-		$returnTypePtr = $this->helper->getNextReturnTypePtr($phpcsFile, $stackPtr);
+		$endOfFunctionPtr = $helper->getEndOfFunctionPtr($phpcsFile, $stackPtr);
+		$startOfFunctionPtr = $helper->getStartOfFunctionPtr($phpcsFile, $stackPtr);
+		$returnTypePtr = $helper->getNextReturnTypePtr($phpcsFile, $stackPtr);
 		$returnType = $tokens[$returnTypePtr];
 
-		$foundReturn = false;
+		$nonVoidReturn = 0;
+		$voidReturn = 0;
 		$scopeClosers = [];
 		for ($ptr = $startOfFunctionPtr; $ptr < $endOfFunctionPtr; $ptr++) {
 			$token = $tokens[$ptr];
@@ -60,23 +61,30 @@ class TypeHintSniff implements Sniff {
 			if ($token['code'] === T_CLOSURE) {
 				array_unshift($scopeClosers, $token['scope_closer']);
 			}
-			if (empty($scopeClosers) && $token['code'] === T_RETURN
-				&& ! $this->helper->isReturnValueVoid($phpcsFile, $ptr)) {
-				$foundReturn = true;
+			if (empty($scopeClosers) && $token['code'] === T_RETURN) {
+                $helper->isReturnValueVoid($phpcsFile, $ptr) ? $voidReturn++ : $nonVoidReturn++;
 			}
 		}
 
-		if (! $foundReturn && $returnTypePtr && $returnType['content'] !== 'void') {
-			$error = 'Return type with no return';
-			$phpcsFile->addWarning($error, $stackPtr, 'UnusedReturnType');
+		if ($returnTypePtr && $returnType['content'] !== 'void') {
+		    if (! $nonVoidReturn) {
+                $error = 'Return type with no return';
+                $phpcsFile->addError($error, $stackPtr, 'UnusedReturnType');
+
+                return;
+            }
+            if ($voidReturn) {
+                $error = 'Return type with void return';
+                $phpcsFile->addError($error, $stackPtr, 'IncorrectVoidReturn');
+            }
 		}
-		if ($foundReturn && ! $returnTypePtr) {
+		if ($nonVoidReturn && ! $returnTypePtr) {
 			$error = 'Return type is missing';
 			$phpcsFile->addWarning($error, $stackPtr, 'NoReturnType');
 		}
-		if ($foundReturn && $returnTypePtr && $returnType['content'] === 'void') {
+		if ($nonVoidReturn && $returnTypePtr && $returnType['content'] === 'void') {
 			$error = 'Void return type when returning non-void';
-			$phpcsFile->addWarning($error, $stackPtr, 'IncorrectVoidReturnType');
+			$phpcsFile->addError($error, $stackPtr, 'IncorrectVoidReturnType');
 		}
 	}
 }

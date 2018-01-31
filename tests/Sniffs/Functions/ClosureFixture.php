@@ -20,4 +20,14 @@ class MyClass {
 			return true;
 		};
 	}
+
+    public function hasClosureWithOneVoidReturnAndBoolHint() {
+        // The next line should report an invalid void return
+	    $myFunc = function() : bool {
+            if (rand(1, 10) > 5) {
+                return true;
+            }
+            return;
+        };
+    }
 }
