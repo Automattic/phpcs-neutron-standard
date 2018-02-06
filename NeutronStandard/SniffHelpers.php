@@ -74,7 +74,7 @@ class SniffHelpers {
 	public function getEndOfFunctionPtr(File $phpcsFile, $stackPtr) {
 		$tokens = $phpcsFile->getTokens();
 		$openFunctionBracketPtr = $phpcsFile->findNext(T_OPEN_CURLY_BRACKET, $stackPtr + 1);
-		return $openFunctionBracketPtr
+		return $openFunctionBracketPtr && isset($tokens[$openFunctionBracketPtr]['bracket_closer'])
 			? $tokens[$openFunctionBracketPtr]['bracket_closer']
 			: $this->getNextSemicolonPtr($phpcsFile, $stackPtr);
 	}
