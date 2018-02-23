@@ -26,6 +26,15 @@ class DisallowMultipleNewlinesSniff implements Sniff {
 			return;
 		}
 		$error = 'Multiple adjacent blank lines are not allowed';
-		$phpcsFile->addError($error, $stackPtr, 'MultipleNewlines');
+		$shouldFix = $phpcsFile->addFixableError($error, $stackPtr, 'MultipleNewlines');
+		if ($shouldFix) {
+			$this->fixTokens($phpcsFile, $stackPtr);
+		}
+	}
+
+	private function fixTokens(File $phpcsFile, $stackPtr) {
+		$phpcsFile->fixer->beginChangeset();
+		$phpcsFile->fixer->replaceToken($stackPtr, '');
+		$phpcsFile->fixer->endChangeset();
 	}
 }
