@@ -19,14 +19,11 @@ class RequireNewlineBetweenFunctionsSniff implements Sniff {
 			return;
 		}
 		$endOfLinePtr = $helper->getNextNewlinePtr($phpcsFile, $endofFuncPtr);
-		if (! $endOfLinePtr) {
+		if (! $endOfLinePtr || ! isset($tokens[$endOfLinePtr + 1])) {
 			return;
 		}
 		$nextToken = $tokens[$endOfLinePtr + 1];
-		if (! isset($nextToken['content'])) {
-			return;
-		}
-		if ($nextToken['content'] === "\n") {
+		if (! isset($nextToken['content']) || $nextToken['content'] === "\n") {
 			return;
 		}
 		// Only trigger if the next line contains a function definition
