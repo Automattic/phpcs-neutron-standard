@@ -63,3 +63,19 @@ trait Thing3 {
 
 	public function traitFuncC();
 }
+
+class Thing4 {
+	public function funcA() {
+		runIt();
+	}
+	/*
+	 * This is a comment
+	 */
+	public function funcB() {
+		runIt();
+	}
+	// This is a comment
+	public function funcC() {
+		runIt();
+	}
+}
