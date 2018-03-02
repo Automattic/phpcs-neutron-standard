@@ -37,6 +37,10 @@ class SniffHelpers {
 		return $nextNonWhitespacePtr ? $tokens[$nextNonWhitespacePtr] : null;
 	}
 
+	public function getNextNewlinePtr(File $phpcsFile, $stackPtr) {
+		return $phpcsFile->findNext(T_WHITESPACE, $stackPtr + 1, null, false, "\n");
+	}
+
 	public function getArgumentTypePtr(File $phpcsFile, $stackPtr) {
 		$ignoredTypes = [
 			T_WHITESPACE,
