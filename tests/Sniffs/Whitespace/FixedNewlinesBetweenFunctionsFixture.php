@@ -82,7 +82,7 @@ class Thing4 {
 	}
 
 	// This is a comment
-	public function funcB() {
+	public function funcC() {
 		runIt();
 	}
 }
