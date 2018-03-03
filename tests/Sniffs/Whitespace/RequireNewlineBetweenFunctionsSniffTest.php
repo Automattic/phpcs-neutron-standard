@@ -13,7 +13,7 @@ class RequireNewlineBetweenFunctionsSniffTest extends TestCase {
 		$phpcsFile = $helper->prepareLocalFileForSniffs($sniffFile, $fixtureFile);
 		$phpcsFile->process();
 		$lines = $helper->getErrorLineNumbersFromFile($phpcsFile);
-		$this->assertEquals([5, 14, 30, 52, 61, 70, 76], $lines);
+		$this->assertEquals([5, 14, 30, 52, 70, 76], $lines);
 	}
 
 	public function testFixRequireNewlineBetweenFunctionsSniff() {

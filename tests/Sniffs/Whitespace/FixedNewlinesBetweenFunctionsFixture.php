@@ -63,7 +63,6 @@ class Thing2 {
 
 trait Thing3 {
 	public function traitFuncA();
-
 	public function traitFuncB();
 
 	public function traitFuncC();
