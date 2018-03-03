@@ -14,6 +14,9 @@ class RequireNewlineBetweenFunctionsSniff implements Sniff {
 	public function process(File $phpcsFile, $stackPtr) {
 		$tokens = $phpcsFile->getTokens();
 		$helper = new SniffHelpers();
+		if ($helper->isFunctionJustSignature($phpcsFile, $stackPtr)) {
+			return;
+		}
 		$endofFuncPtr = $helper->getEndOfFunctionPtr($phpcsFile, $stackPtr);
 		if (! $endofFuncPtr) {
 			return;
