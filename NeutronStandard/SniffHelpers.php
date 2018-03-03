@@ -37,6 +37,10 @@ class SniffHelpers {
 		return $nextNonWhitespacePtr ? $tokens[$nextNonWhitespacePtr] : null;
 	}
 
+	public function getNextNewlinePtr(File $phpcsFile, $stackPtr) {
+		return $phpcsFile->findNext(T_WHITESPACE, $stackPtr + 1, null, false, "\n");
+	}
+
 	public function getArgumentTypePtr(File $phpcsFile, $stackPtr) {
 		$ignoredTypes = [
 			T_WHITESPACE,
@@ -73,6 +77,9 @@ class SniffHelpers {
 
 	public function getEndOfFunctionPtr(File $phpcsFile, $stackPtr) {
 		$tokens = $phpcsFile->getTokens();
+		if ($this->isFunctionJustSignature($phpcsFile, $stackPtr)) {
+			return $this->getNextSemicolonPtr($phpcsFile, $stackPtr);
+		}
 		$openFunctionBracketPtr = $phpcsFile->findNext(T_OPEN_CURLY_BRACKET, $stackPtr + 1);
 		return $openFunctionBracketPtr && isset($tokens[$openFunctionBracketPtr]['bracket_closer'])
 			? $tokens[$openFunctionBracketPtr]['bracket_closer']
