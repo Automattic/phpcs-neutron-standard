@@ -4,6 +4,7 @@ namespace CAR_APP\Vehicles;
 
 use Physics\MovementType;
 use function Roads\getSpeedLimit;
+use function monitor_begin;
 use function Physics\{
 	setMoving,
 	setStopped
@@ -59,4 +60,5 @@ class Car {
 function startMonitor() {
 	new Car();
 	echo str_replace('Foo', 'Bar', 'Foobar...');
+	monitor_begin();
 }
