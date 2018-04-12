@@ -184,19 +184,27 @@ class SniffHelpers {
 		if (! $nextStringOrBracketPtr || ! isset($tokens[$nextStringOrBracketPtr])) {
 			return [];
 		}
+		if (in_array($tokens[$nextStringOrBracketPtr]['content'], ['function', 'const'])) {
+			$nextStringOrBracketPtr = $phpcsFile->findNext([T_STRING, T_OPEN_USE_GROUP], $nextStringOrBracketPtr + 1);
+			if (! $nextStringOrBracketPtr || ! isset($tokens[$nextStringOrBracketPtr])) {
+				return [];
+			}
+		}
 		if ($tokens[$nextStringOrBracketPtr]['type'] === 'T_OPEN_USE_GROUP') {
-			$endBracketPtr = $phpcsFile->findNext([T_CLOSE_USE_GROUP], $nextStringOrBracketPtr + 1);
+			$nextBracketPtr = $nextStringOrBracketPtr;
+			$endBracketPtr = $phpcsFile->findNext([T_CLOSE_USE_GROUP], $nextBracketPtr + 1);
 			if (! $endBracketPtr) {
 				return [];
 			}
-			return $this->getAllStringsBefore($phpcsFile, $nextStringOrBracketPtr + 1, $endBracketPtr);
+			return $this->getAllStringsBefore($phpcsFile, $nextBracketPtr + 1, $endBracketPtr);
 		}
-		$endOfStatementPtr = $phpcsFile->findNext([T_SEMICOLON], $nextStringOrBracketPtr + 1);
-		$nextSeparatorPtr = $phpcsFile->findNext([T_NS_SEPARATOR], $nextStringOrBracketPtr + 1, $endOfStatementPtr);
+		$nextStringPtr = $nextStringOrBracketPtr;
+		$endOfStatementPtr = $phpcsFile->findNext([T_SEMICOLON], $nextStringPtr + 1);
+		$nextSeparatorPtr = $phpcsFile->findNext([T_NS_SEPARATOR], $nextStringPtr + 1, $endOfStatementPtr);
 		if ($nextSeparatorPtr) {
 			return $this->getImportNames($phpcsFile, $nextSeparatorPtr);
 		}
-		return [$tokens[$nextStringOrBracketPtr]['content']];
+		return [$tokens[$nextStringPtr]['content']];
 	}
 
 	public function getAllStringsBefore(File $phpcsFile, int $startPtr, int $endPtr): array {
