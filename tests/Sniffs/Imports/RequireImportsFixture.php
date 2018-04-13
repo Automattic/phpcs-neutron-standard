@@ -8,13 +8,14 @@ use function Roads\getSpeedLimit;
 use function monitor_begin;
 use function Physics\{
 	setMoving,
+	setMovable as makeItMove,
 	setStopped
 };
 use CAR_APP_GLOBALS;
 use WeatherStore;
 use WeatherModels\Storm;
 use const Weather\SNOW;
-use const Weather\{RAIN};
+use const Weather\{RAIN, SLEET, CAR_IN_WEATHER};
 
 const TYPE = 'Car';
 
@@ -51,6 +52,7 @@ class Car {
 		setMoving(TYPE, true);
 		// next line has an explicit namespace call
 		\Physics\setMoving(TYPE, 'drive');
+		makeItMove(CAR_IN_WEATHER);
 		startMonitor();
 		$this->polluter = new PollutionProducer();
 		$data = new stdClass(PHP_VERSION);
