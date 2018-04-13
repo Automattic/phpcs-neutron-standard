@@ -52,6 +52,8 @@ class Car {
 		setMoving(TYPE, true);
 		// next line has an explicit namespace call
 		\Physics\setMoving(TYPE, 'drive');
+		// next line has an unimported function
+		setMovable(CAR_IN_WEATHER);
 		makeItMove(CAR_IN_WEATHER);
 		startMonitor();
 		$this->polluter = new PollutionProducer();
