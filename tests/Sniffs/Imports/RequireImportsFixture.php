@@ -48,6 +48,8 @@ class Car {
 			return new DrivingProblem('no speed limit');
 		}
 		setMoving(TYPE, true);
+		// next line has an explicit namespace call
+		\Physics\setMoving(TYPE, 'drive');
 		startMonitor();
 		$data = new stdClass(PHP_VERSION);
 		$store = new WeatherStore($data);
