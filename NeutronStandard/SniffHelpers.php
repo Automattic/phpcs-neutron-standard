@@ -178,33 +178,59 @@ class SniffHelpers {
 		return 'class';
 	}
 
-	public function getImportNames(File $phpcsFile, $stackPtr): array {
+	private function getImportNamesFromGroup(File $phpcsFile, int $stackPtr): array {
 		$tokens = $phpcsFile->getTokens();
-		$nextStringOrBracketPtr = $phpcsFile->findNext([T_STRING, T_OPEN_USE_GROUP], $stackPtr + 1);
-		if (! $nextStringOrBracketPtr || ! isset($tokens[$nextStringOrBracketPtr])) {
+		$endBracketPtr = $phpcsFile->findNext([T_CLOSE_USE_GROUP], $stackPtr + 1);
+		if (! $endBracketPtr) {
 			return [];
 		}
-		if (in_array($tokens[$nextStringOrBracketPtr]['content'], ['function', 'const'])) {
-			$nextStringOrBracketPtr = $phpcsFile->findNext([T_STRING, T_OPEN_USE_GROUP], $nextStringOrBracketPtr + 1);
-			if (! $nextStringOrBracketPtr || ! isset($tokens[$nextStringOrBracketPtr])) {
-				return [];
+		$lastImportPtr = $stackPtr;
+		$collectedSymbols = [];
+		$isLastImport = false;
+		while (! $isLastImport) {
+			$nextEndOfImportPtr = $phpcsFile->findNext([T_COMMA], $lastImportPtr + 1, $endBracketPtr);
+			if (! $nextEndOfImportPtr) {
+				$isLastImport = true;
+				$nextEndOfImportPtr = $endBracketPtr;
 			}
-		}
-		if ($tokens[$nextStringOrBracketPtr]['type'] === 'T_OPEN_USE_GROUP') {
-			$nextBracketPtr = $nextStringOrBracketPtr;
-			$endBracketPtr = $phpcsFile->findNext([T_CLOSE_USE_GROUP], $nextBracketPtr + 1);
-			if (! $endBracketPtr) {
-				return [];
+			$lastStringPtr = $phpcsFile->findPrevious([T_STRING], $nextEndOfImportPtr - 1, $stackPtr);
+			if (! $lastStringPtr || ! isset($tokens[$lastStringPtr])) {
+				break;
 			}
-			return $this->getAllStringsBefore($phpcsFile, $nextBracketPtr + 1, $endBracketPtr);
+			$collectedSymbols[] = $tokens[$lastStringPtr]['content'];
+			$lastImportPtr = $nextEndOfImportPtr;
 		}
-		$nextStringPtr = $nextStringOrBracketPtr;
-		$endOfStatementPtr = $phpcsFile->findNext([T_SEMICOLON], $nextStringPtr + 1);
-		$nextSeparatorPtr = $phpcsFile->findNext([T_NS_SEPARATOR], $nextStringPtr + 1, $endOfStatementPtr);
-		if ($nextSeparatorPtr) {
-			return $this->getImportNames($phpcsFile, $nextSeparatorPtr);
+		return $collectedSymbols;
+	}
+
+	public function getImportNames(File $phpcsFile, $stackPtr): array {
+		$tokens = $phpcsFile->getTokens();
+
+		$endOfStatementPtr = $phpcsFile->findNext([T_SEMICOLON], $stackPtr + 1);
+		if (! $endOfStatementPtr) {
+			return [];
 		}
-		return [$tokens[$nextStringPtr]['content']];
+
+		// Process grouped imports differently
+		$nextBracketPtr = $phpcsFile->findNext([T_OPEN_USE_GROUP], $stackPtr + 1, $endOfStatementPtr);
+		if ($nextBracketPtr) {
+			return $this->getImportNamesFromGroup($phpcsFile, $nextBracketPtr);
+		}
+
+		// Get the last string before the last semicolon, comma, or closing curly bracket
+		$endOfImportPtr = $phpcsFile->findPrevious(
+			[T_COMMA, T_CLOSE_USE_GROUP],
+			$stackPtr + 1,
+			$endOfStatementPtr
+		);
+		if (! $endOfImportPtr) {
+			$endOfImportPtr = $endOfStatementPtr;
+		}
+		$lastStringPtr = $phpcsFile->findPrevious([T_STRING], $endOfImportPtr - 1, $stackPtr);
+		if (! $lastStringPtr || ! isset($tokens[$lastStringPtr])) {
+			return [];
+		}
+		return [$tokens[$lastStringPtr]['content']];
 	}
 
 	public function getAllStringsBefore(File $phpcsFile, int $startPtr, int $endPtr): array {
@@ -282,7 +308,6 @@ class SniffHelpers {
 
 	public function isConstantDefinition(File $phpcsFile, $stackPtr): bool {
 		$tokens = $phpcsFile->getTokens();
-		$token = $tokens[$stackPtr];
 		$prevNonWhitespacePtr = $phpcsFile->findPrevious(T_WHITESPACE, $stackPtr - 1, $stackPtr - 3, true, null, false);
 		if (! $prevNonWhitespacePtr || ! isset($tokens[$prevNonWhitespacePtr])) {
 			return false;
