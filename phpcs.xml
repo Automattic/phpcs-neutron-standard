@@ -33,4 +33,7 @@
 
     <!-- variables: https://github.com/sirbrillig/VariableAnalysis/ -->
     <rule ref="VariableAnalysis"/>
+    <rule ref="VariableAnalysis.CodeAnalysis.VariableAnalysis.UndefinedVariable">
+        <type>error</type>
+    </rule>
 </ruleset>
