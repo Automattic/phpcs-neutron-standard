@@ -23,17 +23,44 @@ class RequireImportsSniff implements Sniff {
 			return $this->processUse($phpcsFile, $stackPtr);
 		}
 		if ($helper->isStaticFunctionCall($phpcsFile, $stackPtr)) {
+			if ($this->hasNamespace($phpcsFile, $stackPtr)) {
+				return $this->markAbsoluteViolation($phpcsFile, $stackPtr);
+			}
 			return $this->processStaticFunctionCall($phpcsFile, $stackPtr);
 		}
-		if ($helper->isFunctionCall($phpcsFile, $stackPtr) && ! $helper->isMethodCall($phpcsFile, $stackPtr) && ! $helper->isBuiltInFunction($phpcsFile, $stackPtr) && ! $helper->isObjectInstantiation($phpcsFile, $stackPtr)) {
+		if ($helper->isFunctionCall($phpcsFile, $stackPtr) &&
+			! $helper->isMethodCall($phpcsFile, $stackPtr) &&
+			! $helper->isBuiltInFunction($phpcsFile, $stackPtr) &&
+			! $helper->isObjectInstantiation($phpcsFile, $stackPtr)
+		) {
+			if ($this->hasNamespace($phpcsFile, $stackPtr)) {
+				return $this->markAbsoluteViolation($phpcsFile, $stackPtr);
+			}
 			return $this->processFunctionCall($phpcsFile, $stackPtr);
 		}
-		if ($helper->isConstant($phpcsFile, $stackPtr) && ! $helper->isConstantDefinition($phpcsFile, $stackPtr) && ! $helper->isPredefinedConstant($phpcsFile, $stackPtr)) {
+		if ($helper->isConstant($phpcsFile, $stackPtr) &&
+			! $helper->isConstantDefinition($phpcsFile, $stackPtr) &&
+			! $helper->isPredefinedConstant($phpcsFile, $stackPtr)
+		) {
+			if ($this->hasNamespace($phpcsFile, $stackPtr)) {
+				return $this->markAbsoluteViolation($phpcsFile, $stackPtr);
+			}
 			$this->processConstant($phpcsFile, $stackPtr);
 		}
-		if ($helper->isClass($phpcsFile, $stackPtr) && ! $helper->isPredefinedClass($phpcsFile, $stackPtr) && ! $helper->isPredefinedConstant($phpcsFile, $stackPtr)) {
+		if ($helper->isClass($phpcsFile, $stackPtr) &&
+			! $helper->isPredefinedClass($phpcsFile, $stackPtr) &&
+			! $helper->isPredefinedConstant($phpcsFile, $stackPtr)
+		) {
+			if ($this->hasNamespace($phpcsFile, $stackPtr)) {
+				return $this->markAbsoluteViolation($phpcsFile, $stackPtr);
+			}
 			$this->processClass($phpcsFile, $stackPtr);
 		}
+	}
+
+	private function markAbsoluteViolation(File $phpcsFile, int $stackPtr) {
+		$error = "Absolute symbols are not allowed; Import the symbol instead.";
+		$phpcsFile->addWarning($error, $stackPtr, 'Absolute');
 	}
 
 	private function processClass($phpcsFile, $stackPtr) {
@@ -54,6 +81,11 @@ class RequireImportsSniff implements Sniff {
 			$error = "Constants must be explicitly imported. Found '{$constantName}'.";
 			$phpcsFile->addWarning($error, $stackPtr, 'Constant');
 		}
+	}
+
+	private function hasNamespace(File $phpcsFile, int $stackPtr): bool {
+		$startOfStatementPtr = $phpcsFile->findPrevious([T_SEMICOLON], $stackPtr);
+		return !! $phpcsFile->findPrevious([T_NS_SEPARATOR], $stackPtr, $startOfStatementPtr);
 	}
 
 	private function processStaticFunctionCall(File $phpcsFile, $stackPtr) {
