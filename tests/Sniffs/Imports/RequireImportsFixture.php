@@ -3,6 +3,7 @@
 namespace CAR_APP\Vehicles;
 
 use Physics\MovementType;
+use VehicleWithEmissions as PollutionProducer;
 use function Roads\getSpeedLimit;
 use function monitor_begin;
 use function Physics\{
@@ -51,6 +52,7 @@ class Car {
 		// next line has an explicit namespace call
 		\Physics\setMoving(TYPE, 'drive');
 		startMonitor();
+		$this->polluter = new PollutionProducer();
 		$data = new stdClass(PHP_VERSION);
 		$store = new WeatherStore($data);
 		$store->trackWeather($store->key);
