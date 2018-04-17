@@ -63,7 +63,7 @@ class Car {
 		try {
 			$store->trackWeather($store->key);
 			// next line has an explicit namespace call
-		} catch (\Exception $err) {
+		} catch (\MyException $err) {
 			return new Exception('buggy');
 		}
 		$name = $store->current_name_as_string;
