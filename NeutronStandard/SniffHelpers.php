@@ -253,13 +253,13 @@ class SniffHelpers {
 		if ($nextSeparatorPtr) {
 			return false;
 		}
-		$prevSeparatorPtr = $phpcsFile->findPrevious([T_NS_SEPARATOR], $stackPtr - 1, $stackPtr - 2);
-		if ($prevSeparatorPtr) {
-			return false;
-		}
 		$previousStatementPtr = $phpcsFile->findPrevious([T_SEMICOLON, T_CLOSE_CURLY_BRACKET], $stackPtr - 1);
 		if (! $previousStatementPtr) {
 			$previousStatementPtr = 1;
+		}
+		$isUseOrNamespace = $phpcsFile->findPrevious([T_USE, T_NAMESPACE], $stackPtr - 1, $previousStatementPtr);
+		if ($isUseOrNamespace) {
+			return false;
 		}
 		if ($this->isConstant($phpcsFile, $stackPtr)) {
 			return false;
@@ -291,13 +291,13 @@ class SniffHelpers {
 		if ($nextSeparatorPtr) {
 			return false;
 		}
-		$prevSeparatorPtr = $phpcsFile->findPrevious([T_NS_SEPARATOR], $stackPtr - 1, $stackPtr - 2);
-		if ($prevSeparatorPtr) {
-			return false;
-		}
 		$previousStatementPtr = $phpcsFile->findPrevious([T_SEMICOLON, T_CLOSE_CURLY_BRACKET], $stackPtr - 1);
 		if (! $previousStatementPtr) {
 			$previousStatementPtr = 1;
+		}
+		$isUseOrNamespace = $phpcsFile->findPrevious([T_USE, T_NAMESPACE], $stackPtr - 1, $previousStatementPtr);
+		if ($isUseOrNamespace) {
+			return false;
 		}
 		$prevUsePtr = $phpcsFile->findPrevious([T_USE], $stackPtr - 1, $previousStatementPtr);
 		if ($prevUsePtr) {
