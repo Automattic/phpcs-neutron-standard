@@ -23,6 +23,7 @@ class RequireImportsSniffTest extends TestCase {
 			51,
 			55,
 			57,
+			66,
 		], $lines);
 	}
 }

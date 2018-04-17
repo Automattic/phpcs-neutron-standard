@@ -62,7 +62,8 @@ class Car {
 		$store = new WeatherStore($data);
 		try {
 			$store->trackWeather($store->key);
-		} catch (Exception $err) {
+			// next line has an explicit namespace call
+		} catch (\Exception $err) {
 			return new Exception('buggy');
 		}
 		$name = $store->current_name_as_string;
