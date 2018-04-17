@@ -14,15 +14,15 @@ class RequireImportsSniffTest extends TestCase {
 		$phpcsFile->process();
 		$lines = $helper->getWarningLineNumbersFromFile($phpcsFile);
 		$this->assertEquals([
-			25,
-			28,
-			32,
-			35,
-			37,
-			45,
-			50,
-			54,
-			56,
+			26,
+			29,
+			33,
+			36,
+			38,
+			46,
+			51,
+			55,
+			57,
 		], $lines);
 	}
 }

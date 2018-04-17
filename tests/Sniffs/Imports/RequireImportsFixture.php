@@ -16,6 +16,7 @@ use WeatherStore;
 use WeatherModels\Storm;
 use const Weather\SNOW;
 use const Weather\{RAIN, SLEET, CAR_IN_WEATHER};
+use Exception;
 
 const TYPE = 'Car';
 
@@ -39,7 +40,7 @@ class Car {
 			}
 		}
 		if ($currentWeather instanceof Storm) {
-			return false;
+			return new Exception('stormy');
 		}
 		// next line has unimported class
 		if ($currentWeather instanceof Drizzle) {
@@ -59,7 +60,11 @@ class Car {
 		$this->polluter = new PollutionProducer();
 		$data = new stdClass(PHP_VERSION);
 		$store = new WeatherStore($data);
-		$store->trackWeather($store->key);
+		try {
+			$store->trackWeather($store->key);
+		} catch (Exception $err) {
+			return new Exception('buggy');
+		}
 		$name = $store->current_name_as_string;
 		return new MovementType('driving in ' . $name);
 	}
