@@ -59,7 +59,10 @@ class RequireImportsSniff implements Sniff {
 	}
 
 	private function markAbsoluteViolation(File $phpcsFile, int $stackPtr) {
-		$error = "Absolute symbols are not allowed; Import the symbol instead.";
+		$tokens = $phpcsFile->getTokens();
+		$token = $tokens[$stackPtr];
+		$symbolName = $token['content'];
+		$error = "Absolute symbols are not allowed; Import the symbol instead. Found '{$symbolName}'.";
 		$phpcsFile->addWarning($error, $stackPtr, 'Absolute');
 	}
 
