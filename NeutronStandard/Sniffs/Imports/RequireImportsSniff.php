@@ -87,8 +87,8 @@ class RequireImportsSniff implements Sniff {
 	}
 
 	private function hasNamespace(File $phpcsFile, int $stackPtr): bool {
-		$startOfStatementPtr = $phpcsFile->findPrevious([T_SEMICOLON], $stackPtr);
-		return !! $phpcsFile->findPrevious([T_NS_SEPARATOR], $stackPtr, $startOfStatementPtr);
+		$tokens = $phpcsFile->getTokens();
+		return isset($tokens[$stackPtr - 1]) && $tokens[$stackPtr - 1]['type'] === 'T_NS_SEPARATOR';
 	}
 
 	private function processStaticFunctionCall(File $phpcsFile, $stackPtr) {
