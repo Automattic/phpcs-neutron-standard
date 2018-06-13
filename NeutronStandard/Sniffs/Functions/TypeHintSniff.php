@@ -26,6 +26,10 @@ class TypeHintSniff implements Sniff {
 			T_CALLABLE,
 			T_SELF,
 		];
+		// Support for phpcs < 3.3; see https://github.com/Automattic/phpcs-neutron-standard/issues/62
+		if (defined('T_ARRAY_HINT')) {
+			$hintTypes[] = T_ARRAY_HINT;
+		}
 
 		for ($ptr = ($openParenPtr + 1); $ptr < $closeParenPtr; $ptr++) {
 			if ($tokens[$ptr]['code'] === T_VARIABLE) {
