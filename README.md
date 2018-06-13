@@ -1,5 +1,7 @@
 # Neutron PHP Standard <a href="https://travis-ci.org/Automattic/phpcs-neutron-standard"><img src="https://img.shields.io/travis/Automattic/phpcs-neutron-standard/master.svg" alt="Build status" /></a>
 
+Testing.
+
 These are a set of modern (PHP >7) linting guidelines meant to be applied in addition to the [the WordPress coding standards](https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards) for WordPress development. Because of the newer PHP version, it is not suitable for work on Core WordPress, but may be useful for those who are not bound by PHP 5.2.
 
 These guidelines are being developed primarily for a team within [Automattic](https://automattic.com/), but anyone is free to use them, suggest changes, or report bugs.
