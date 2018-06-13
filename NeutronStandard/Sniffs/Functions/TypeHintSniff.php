@@ -23,7 +23,6 @@ class TypeHintSniff implements Sniff {
 		$closeParenPtr = $tokens[$stackPtr]['parenthesis_closer'];
 		$hintTypes = [
 			T_STRING,
-			T_ARRAY_HINT,
 			T_CALLABLE,
 			T_SELF,
 		];
