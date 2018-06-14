@@ -302,6 +302,10 @@ class SniffHelpers {
 	}
 
 	public function isWithinUseStatement(File $phpcsFile, $stackPtr): bool {
+		$isClosureImport = $phpcsFile->findNext([T_OPEN_PARENTHESIS], $stackPtr + 1, $stackPtr + 5);
+		if ($isClosureImport) {
+			return false;
+		}
 		$previousStatementPtr = $this->getPreviousStatementPtr($phpcsFile, $stackPtr);
 		return !! $phpcsFile->findPrevious([T_USE], $stackPtr - 1, $previousStatementPtr);
 	}
