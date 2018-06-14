@@ -198,6 +198,10 @@ class SniffHelpers {
 		if (! $nextStringPtr) {
 			return 'unknown';
 		}
+		$isClosureImport = $phpcsFile->findNext([T_OPEN_PARENTHESIS], $stackPtr + 1, $nextStringPtr);
+		if ($isClosureImport) {
+			return 'closure';
+		}
 		$nextString = $tokens[$nextStringPtr];
 		if ($nextString['content'] === 'function') {
 			return 'function';
