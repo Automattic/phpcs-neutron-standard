@@ -95,9 +95,11 @@ function startMonitor() {
 	OldAlerts\makeAlert();
 	new Car();
 	echo str_replace('Foo', 'Bar', 'Foobar...');
-	monitor_begin();
-	whitelisted_function();
-	allowed_funcs_function_one();
+	$rows = whitelisted_function();
+	$data = allowed_funcs_function_one();
+	array_map(function (array $row) use ($data) {
+		$data && monitor_begin($row);
+	}, $rows);
 }
 
 define(WHATEVER, 'some words');
