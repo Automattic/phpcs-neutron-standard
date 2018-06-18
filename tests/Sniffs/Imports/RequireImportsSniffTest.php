@@ -42,4 +42,20 @@ class RequireImportsSniffTest extends TestCase {
 		$this->assertEquals($expectedLines, $lines);
 		$this->assertSame(count($expectedLines), $phpcsFile->getWarningCount());
 	}
+
+	public function testRequireImportsSniffIgnoresAllowedImports() {
+		$fixtureFile = __DIR__ . '/RequireImportsAllowedPatternFixture.php';
+		$sniffFile = __DIR__ . '/../../../NeutronStandard/Sniffs/Imports/RequireImportsSniff.php';
+		$helper = new SniffTestHelper();
+		$phpcsFile = $helper->prepareLocalFileForSniffs($sniffFile, $fixtureFile);
+		$phpcsFile->ruleset->setSniffProperty(
+			'NeutronStandard\Sniffs\Imports\RequireImportsSniff',
+			'ignoreUnimportedSymbols',
+			'/^(something_to_ignore|whitelisted_function|allowed_funcs_\w+)$/'
+		);
+		$phpcsFile->process();
+		$lines = $helper->getWarningLineNumbersFromFile($phpcsFile);
+		$expectedLines = [];
+		$this->assertEquals($expectedLines, $lines);
+	}
 }
