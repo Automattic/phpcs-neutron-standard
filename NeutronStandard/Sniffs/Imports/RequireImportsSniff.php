@@ -39,6 +39,7 @@ class RequireImportsSniff implements Sniff {
 		$this->seenSymbols[] = $symbol;
 		// If the symbol is in the ignore list, ignore it
 		if ($this->isSymbolIgnored($symbol)) {
+			$this->markSymbolUsed($symbol);
 			return;
 		}
 		// If the symbol is a fully-qualified namespace, ignore it
