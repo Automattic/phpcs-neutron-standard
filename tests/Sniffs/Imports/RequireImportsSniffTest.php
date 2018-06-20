@@ -58,4 +58,15 @@ class RequireImportsSniffTest extends TestCase {
 		$expectedLines = [];
 		$this->assertEquals($expectedLines, $lines);
 	}
+
+	public function testRequireImportsSniffDoesNotCountMethodNames() {
+		$fixtureFile = __DIR__ . '/RequireImportsMethodNameFixture.php';
+		$sniffFile = __DIR__ . '/../../../NeutronStandard/Sniffs/Imports/RequireImportsSniff.php';
+		$helper = new SniffTestHelper();
+		$phpcsFile = $helper->prepareLocalFileForSniffs($sniffFile, $fixtureFile);
+		$phpcsFile->process();
+		$lines = $helper->getWarningLineNumbersFromFile($phpcsFile);
+		$expectedLines = [ 11 ];
+		$this->assertEquals($expectedLines, $lines);
+	}
 }
