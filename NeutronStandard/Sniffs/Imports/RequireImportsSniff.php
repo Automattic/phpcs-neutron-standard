@@ -183,10 +183,11 @@ class RequireImportsSniff implements Sniff {
 	}
 
 	private function isFunctionDefined(File $phpcsFile, string $functionName): bool {
+		$helper = new SniffHelpers();
 		$functionPtr = $phpcsFile->findNext([T_FUNCTION], 0);
 		while ($functionPtr) {
 			$thisFunctionName = $phpcsFile->getDeclarationName($functionPtr);
-			if ($functionName === $thisFunctionName) {
+			if ($functionName === $thisFunctionName && ! $helper->isFunctionAMethod($phpcsFile, $functionPtr)) {
 				return true;
 			}
 			$functionPtr = $phpcsFile->findNext([T_FUNCTION], $functionPtr + 1);
