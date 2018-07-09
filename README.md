@@ -296,7 +296,7 @@ It's often possible to fetch the data from the database first (possibly in a sep
 
 ## Composition Roots
 
-**New code SHOULD NOT instantiate objects except in classes whose sole purpose is to instantiate classes (so-called "factories").**
+**New code SHOULD NOT instantiate objects except for data objects and inside functions whose sole purpose is to instantiate classes (so-called "factories").**
 
 **New code SHOULD instantiate objects in as few places as possible.**
 
@@ -307,6 +307,8 @@ At the top of a such a tree of injection is a "root" class which kicks off the w
 When a class is instantiated multiple places, it must have all its dependencies provided in each of those places. If one of those dependencies changes, or a new one is added, it means finding all the places where the instances are created and changing them all. This is risky and time-consuming.
 
 Instead, if a single function is used to instantiate a class (typically a static function called a "factory"), then it becomes possible to just make the change in one place. If a new configuration of dependencies is desired, it's possible to just create a new factory.
+
+This does not apply to "data objects" whose sole purpose is to represent some data and have no dependencies themselves.
 
 ## Newlines
 
