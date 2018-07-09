@@ -314,6 +314,12 @@ Instead, if a single function is used to instantiate a class (typically a static
 
 Whitespace is useful for separating logical sections of code, but excess whitespace takes up too much of the screen. One empty line is usually sufficient to separate sections of code.
 
+## Spacing
+
+**New code SHOULD NOT use whitespace to align assignments or associative arrays.**
+
+Assignment alignment looks nice sometimes, but it vastly complicates writing and modifying code. If there are twenty adjacent assignments, and one of them gets longer than the others, it requires the developer to go back and adjust the spacing of all the other lines. It's also not always consistent since different typeface and displays will have different visual widths of spaces and other characters.
+
 ## Variable Functions
 
 **New code SHOULD NOT call Variable Functions.**
