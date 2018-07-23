@@ -20,7 +20,7 @@
         }
     },
     "require": {
-        "php": ">=7.0"
+        "php": "^7.0"
     },
     "require-dev": {
         "sirbrillig/phpcs-variable-analysis": "^2.0.1",
