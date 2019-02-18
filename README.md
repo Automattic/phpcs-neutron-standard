@@ -82,37 +82,23 @@ The remaining advantage of global functions is portability across a wide codebas
 
 ## Static methods
 
-**New code MUST NOT introduce non-pure static methods. For this purpose, a pure method always returns the same result for the same arguments with no side effects.**
+**New code SHOULD NOT introduce new static methods.**
 
-Side effects include any database access (even read access), network requests, console output, writing files, changing global variables, sending an email, or writing to IRC or Slack.
+In many cases, a namespaced function (a function inside a namespace but not inside a class) is more clear than a static method. They also do not have a dependency on a class itself. Exceptions certainly exist, for example, factory functions to create new object instances.
 
-Static methods are typically called directly, like `MyClass::myMethod()`, which is effectively a namespaced global function call. This means that the code which calls the static function has an implicit and tightly-coupled dependency on the static function and its class. It is implicit because it may not be obvious to the developer using the code, and it is tightly coupled because it cannot be mocked.
-
-For example, if a static method sends a message to Slack or makes a database update, a test for the calling code has no direct mechanism to prevent that Slack message or the database call.
-
-If the static method is pure, the same dependency exists, but it becomes an implementation detail related to the data in the calling code, reducing the risks.
-
-## Namespace functions
-
-**New code MUST NOT introduce non-pure namespace functions outside of a class. For this purpose, a pure method always returns the same result for the same arguments with no side effects.**
-
-Namespace functions, while greatly reducing the risk of collisions, are still a form of global function call. Using them therefore carries the same risks as using global functions or static methods. See the section on Static methods for why this can create unnecessary risk.
+Another exception is when several stand-alone functions must call each other and most of those calls should be private. Since it is not possible to make a namespaced function private, static methods are a better choice. Similarly, any stand-alone function which requires access to properties of an object which cannot be instance properties would do better with static definition (although there is a strong argument for avoiding static properties since they are global variables).
 
 ## Functions with side effects
 
-**New code MUST NOT call non-pure functions that are not methods of an object except within classes whose specific purpose are to make side effects. For this purpose, a pure method always returns the same result for the same arguments with no side effects.**
+**New code SHOULD NOT introduce non-pure functions that are not methods of an object except within classes whose specific purpose are to make side effects.**
 
-Side effects include any database access (even read access), network requests, console output, writing files, changing global variables, sending an email, or writing to IRC or Slack.
+Side effects include but are not limited to database writes, network requests, writing files, changing global variables, sending an email, or writing to IRC or Slack.
 
-To be more specific, a function should not make a call like `update_database()` directly. Instead it should call `$this->database->update_database()`. In this example, `$this->database` should be an instance of a class whose sole purpose is to update a database. `$this->database` should be injected into the class or function which uses it.
+To be more specific, a function should not make a call like `update_database()` directly. Instead it should call `$this->database->update_database()`. In this example, `$this->database` should be an instance of a class whose sole purpose is to update a database. `$this->database` should be injected into the class or function which uses it by using some form of dependency injection.
 
 Calling a function with side effects creates an implicit and tightly-coupled dependency on that function. It is implicit because it may not be obvious to the developer using the code, and it is tightly coupled because it cannot be mocked.
 
-For example, if a function sends a message to Slack or makes a database update, a test for the calling code has no direct mechanism to prevent that Slack message or the database call.
-
 On the other hand, if the code being tested is explicitly in a class whose sole purpose is to send messages or update a database, the risk is reduced. In this situation, special measures can be taken to mock the side effects, or they can just be assumed to be correct. Such classes should have as little business logic as possible in order to reduce the need for automated testing.
-
-If the static method is pure, the same dependency exists, but it becomes an implementation detail related to the data in the calling code, reducing the risks.
 
 ## Global variables
 
@@ -128,9 +114,7 @@ On the other hand, if the code being tested is explicitly in a class whose sole 
 
 Strong types allow the compiler to spot errors when PHP code is being executed, preventing subtle bugs by making usage explicit. It also allows the compiler to optimize execution of function calls. Finally, it aids in function design by exposing implicit assumptions about the data being passed between parts of a code base and making them explicit. This can help future developers (or our future selves) from mistaking these assumptions.
 
-This is complicated by return types which can be multiple values. For example, some functions can return `WP_Error` or `string`.
-
-This could be solved by using a wrapper class at the expense of additional complexity when using the value. One possible implementation of this is the `Maybe` [described in this post](http://payton.codes/2017/11/11/maybe-returning-errors-in-php/) (this concept is [more often called a `Result` in functional programming](https://doc.rust-lang.org/std/result/enum.Result.html)).
+This is complicated by types which can be multiple values. For example, some functions can return `WP_Error` or `string`. It can also be non-specific in the case of generics such as `array`, since the type does not specify what the array contains. In those cases, PHPDoc comments should be used to explain types.
 
 ## Constants
 
@@ -172,7 +156,7 @@ We might call it `foobar_shortcode`, but that doesn't really say what it does.
 
 ## Function size
 
-**New functions SHOULD be fewer than 20 lines, excluding comments and whitespace.**
+**New functions SHOULD be fewer than 40 lines, excluding comments and whitespace.**
 
 Long functions contain code that cannot be seen all at once, and therefore often require scrolling up and down in order to follow the flow of execution. In this way they tend to resemble a program itself, and can hide bugs using the same patterns that hide bugs in code which does not use functions at all.
 
@@ -184,7 +168,7 @@ The code in functions naturally will grow over time, but as it does so it is imp
 
 **New code SHOULD use PHP array functions when possible to clarify the purpose of a loop.**
 
-Using `foreach` is convenient, but can hide the purpose of a loop. This is subjective, and so it's hard to have a hard rule, but in general it's worth considering what you actually want to do with a loop and see if it's possible to make its meaning explicit by using an array function.
+Using `foreach` is convenient, but can hide the purpose of a loop. This is subjective, and so it's hard to have a hard rule, but in general it's worth considering what you actually want to do with a loop and see if it's possible to make its meaning explicit by using an array function (`array_map`, `array_filter`, `array_reduce`, etc.).
 
 If a loop does multiple things, then we must consider if it's worthwhile to split it into multiple loops, each which only do one thing. This might at first seem less efficient, but in many cases the arrays in question are quite small and multiple loops will increase readability much more than they will affect performance.
 
@@ -200,15 +184,13 @@ Specifically, foreach expresses the intent “repeat this block of code for each
 
 **New PHP files MUST NOT have side effects outside of a function.**
 
-Side effects include any database access (even read access), network requests, console output, writing files, changing global variables, sending an email, or writing to IRC or Slack.
-
 Class constructors are meant to initialize a new object, setting default values and preparing any data which was passed in as a dependency. They also happen to be a "free" function call which happens when the class is instantiated, which means that when a class's purpose is simple, they're often used to start doing what that class is designed to do.
 
 Because class constructors are typically called explicitly with the `new` keyword and the class name, this latter pattern is effectively using the class constructor as a global or static function. If the function has side effects, we create implicit and tightly coupled dependencies between the instantiating code and the side effects.
 
 When writing tests, we might want to avoid side effects (like Slack messages or database writing) but if they are in a constructor we may not know about them, and we may not be able to mock them. Even worse, any code which creates the class will probably not expect them either.
 
-If a class has only one purpose, it's best to create a single instance method, like `run()` or `doSomething()` (ideally one that actually describes the purpose of the function) and use that to activate the side effects.
+If a class has only one purpose, it's best to create a single instance method, like `run()` or `activate()` (ideally one that actually describes the purpose of the function) and use that to activate the side effects.
 
 Even more challenging than side effects in a constructor is when just requiring a PHP file performs side effects. This is almost always unexpected and can be a real challenge when testing. File imports should be a totally pure operation.
 
@@ -216,7 +198,7 @@ Even more challenging than side effects in a constructor is when just requiring 
 
 **New code MUST NOT use `array()` to create array primitives; use the `[]` shorthand syntax instead.**
 
-This is just for the sake of consistency. The shorthand is fewer characters to type and is commonly used outside of WordPress code that must support PHP < 5.4.
+This is just for the sake of consistency. The shorthand is fewer characters to type and is commonly used outside of code that must support PHP < 5.4.
 
 ## Yoda conditions
 
@@ -290,13 +272,13 @@ Occasionally this sort of inheritance is necessary, but more often it is a form 
 
 A common WordPress pattern is to pass a site ID or a user ID into a function that manipulates site or user data; then that function will query the database to get the data it needs to use.
 
-The problem with this pattern is that it turns what might be a pure data-manipulation function into a non-pure function with a dependency on the database. Pure functions are much easier to test, easier to move around, and often easier to understand.
+The problem with this pattern is that it turns what might be a pure data-manipulation function into a non-pure function with a dependency on the database. Pure functions are much easier to test, easier to move around, and often easier to understand. Passing an ID also may cause a single chain of function calls to make the same database call many times, once for each function which needs access to the data, leading to large performance issues.
 
 It's often possible to fetch the data from the database first (possibly in a separate function) and then inject the entire object into the function that manipulates it. This makes it so that the functions each do only one thing, increasing readability and decreasing dependencies.
 
 ## Composition Roots
 
-**New code SHOULD NOT instantiate objects except for data objects and inside functions whose sole purpose is to instantiate classes (so-called "factories").**
+**New code SHOULD NOT instantiate objects except for value objects.**
 
 **New code SHOULD instantiate objects in as few places as possible.**
 
@@ -308,7 +290,7 @@ When a class is instantiated multiple places, it must have all its dependencies 
 
 Instead, if a single function is used to instantiate a class (typically a static function called a "factory"), then it becomes possible to just make the change in one place. If a new configuration of dependencies is desired, it's possible to just create a new factory.
 
-This does not apply to "data objects" whose sole purpose is to represent some data and have no dependencies themselves.
+This does not apply to "value objects" whose sole purpose is to represent some data type and have no dependencies themselves.
 
 ## Newlines
 
@@ -325,8 +307,6 @@ Assignment alignment looks nice sometimes, but it vastly complicates writing and
 ## Variable Functions
 
 **New code SHOULD NOT call Variable Functions.**
-
-**New code MUST NOT use call_user_func or call_user_func_array.**
 
 Having variable function names prevents easily tracing the usage and definition of a function. If a function signature needs to be changed or removed, for example, a developer would typically search the code base for uses of that function name. With variable functions, a function name could be created by joining strings together or otherwise manipulating a string, making it nearly impossible to find that use. Even if the string is unmodified, it may be defined somewhere far away from the place where it is called, again making it hard to trace its use. Lastly, with a function name as a string, it's possible for the string to be accidentally modified or to be set to something unexpected, potentially causing a fatal error.
 
@@ -354,7 +334,76 @@ switch($myFunction) {
 }
 ```
 
-For consistency, if we _do_ need to call a variable function, we might as well use the newer version of the syntax.
+## Boolean arguments
 
-- `call_user_func($f, $x, $y, $z)` is equal to `$f($x, $y, $z)`
-- `call_user_func_array($f, $args)` is equal to `$f(...$args)`
+**New code SHOULD NOT use boolean arguments.**
+
+Since function arguments are not named in PHP, there is no way to know what the meaning of an argument from the call-site. For example, `process_data( true );` does not give us any clue what `true` is referring to. This can be mitigated by first putting the boolean argument in a variable (eg: `process_data( $strictly );`), but even better is passing a constant or string argument (eg: `process_data( 'strictly' );`).
+
+## Naming Conventions
+
+**New code MUST use snake-case for variable and function names.**
+
+**New files MUST NOT be prefixed with "class-".**
+
+We should follow the [WordPress coding standards](https://make.wordpress.org/core/handbook/best-practices/coding-standards/php/#naming-conventions) for naming with the following exception:
+
+Class files will not be prefixed with `class-`. This is unnecessary if a class is well-named.
+
+## Namespaces
+
+**Namespaces SHOULD be represented in the file structure.**
+
+**Namespaces SHOULD follow class naming guidelines.**
+
+To make it easier to find files, namespaces should more-or-less mirror file paths. Namespaced directories and files should be kebab-case.
+
+Namespaces (in code) should follow class naming conventions, with an underscore if the namespace has multiple words.
+
+## Classes
+
+**Class files SHOULD only ever contain one class.**
+
+**Class files SHOULD NOT contain any functions outside of the class.**
+
+## Functions outside of classes
+
+**Functions that do not make sense in a class MUST go in a namespace.**
+
+**Functions in a namespace should go in a file with same name as the namespace.**
+
+For example, `receipts/receipts.php` for functions in the `Receipts` namespace.
+
+## Database access
+
+**All database queries MUST check if the query failed.**
+
+Never assume that a database query succeeds, or that it contains the data requested. There are many cases which can cause a query to fail.
+
+Use a wrapper function like `Db\throw_on_wpdb_error( $wpdb->query( ... ) )` to check if a database query failed, or a Transaction wrapper like `Db\Transaction`.
+
+## Value Objects
+
+**Value objects SHOULD NOT have any logic or methods except accessors.**
+
+When creating objects to represent data values, those objects should have public properties and no methods, unless methods are necessary to provide read-only access to a property. If any processing is required on such an object, that processing should be placed in a different class whose purpose is to manipulate the value object.
+
+If value objects gain methods, they become more than just values and their purpose becomes less clear. They can also quickly become cluttered since there are often an infinite number of operations that might be performed on a value. Keeping the operations in separate places allows those operations to be organized using classes and namespaces. The value classes themselves should ideally remain as simple as a string or an integer. That way they are also easy to serialize or compare if needed.
+
+## Database query return values
+
+**Database queries MUST explicitly set values of a value object.**
+
+Database calls can return an object or an array, and those often have sub-properties which are either objects or arrays themselves. This makes consistency among code complicated because there is no common way for that data to be represented. It also means that it's not clear what properties are expected or available, instead putting that responsibility on the database; the developer must then assume that the data they need is present (an implicit dependency) or constantly guard against missing properties. It's safer for everyone if the query explicitly assigns the results to object properties, ideally of a custom value object, even if that means updating those assignments when the database schema changes.
+
+## Clear Public API
+
+**New code SHOULD be divided into modules.**
+
+**New code SHOULD NOT access functions or classes outside the public API of another module.**
+
+**New functions SHOULD use namespacing to make it clear if they are part of a module's public API.**
+
+Code should be divided into modules of responsibility, where each module has one purpose. Each code module (the definition of which is subjective depending on the situation) should have a set of functions and/or classes which are intended to be the interface to that module from other modules. Modules should only use the public API of other modules.
+
+Sometimes implementation details of a module can be hidden using private functions in a class, but not always. Therefore each module should have a clear namespace for its public API so that developers know where to look to use that module and avoid accidentally using code which is subject to change.
