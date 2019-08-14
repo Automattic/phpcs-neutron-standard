@@ -49,7 +49,7 @@ class Thing2 {
 		$innerFuncA();
 	}
 
-	public function hasInnerFunctions() {
+	public function hasInnerFunctions2() {
 		function totallyInnerA() {
 			runIt();
 		}
@@ -62,10 +62,11 @@ class Thing2 {
 }
 
 trait Thing3 {
-	public function traitFuncA();
-	public function traitFuncB();
+	public function traitFuncA() {}
 
-	public function traitFuncC();
+	public function traitFuncB() {}
+
+	public function traitFuncC() {}
 }
 
 class Thing4 {
@@ -84,4 +85,11 @@ class Thing4 {
 	public function funcC() {
 		runIt();
 	}
+}
+
+interface Thing4 {
+	public function traitFuncA();
+	public function traitFuncB();
+
+	public function traitFuncC();
 }
