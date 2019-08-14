@@ -15,7 +15,7 @@ class TypeHintSniffTest extends TestCase {
 		$phpcsFile->process();
 		$errorLines = $helper->getErrorLineNumbersFromFile($phpcsFile);
 		$warningLines = $helper->getWarningLineNumbersFromFile($phpcsFile);
-		$this->assertEquals([138, 195, 200, 207], $errorLines);
+		$this->assertEquals([138], $errorLines);
 		$this->assertEquals([118, 123, 128, 133], $warningLines);
 	}
 

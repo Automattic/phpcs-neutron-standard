@@ -39,7 +39,7 @@ class MyClass {
 	}
 
 	// Next line should report risky method
-	public function __callStatic($name, $args) {
+	public static function __callStatic($name, $args) {
 		$name;
 		$args;
 	}

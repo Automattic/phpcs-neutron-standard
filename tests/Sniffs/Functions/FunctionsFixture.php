@@ -1,5 +1,5 @@
 <?php
-class MyClass {
+abstract class MyClass {
 	public function notTooLong() {
 		/**
 		 * Lorem ipsum
@@ -191,16 +191,6 @@ class MyClass {
 		'something';
 	}
 
-	// The next line should report an invalid return type
-	public function hasBoolReturnAndVoidHint(): void {
-		return false;
-	}
-
-	// The next line should report an invalid return type
-	public function hasNullReturnAndVoidHint(): void {
-		return null;
-	}
-
 	abstract public function abstractFunctionWithReturn(): int;
 
 	// The next line should report an invalid void return
@@ -208,6 +198,6 @@ class MyClass {
 		if (rand(1, 10) > 5) {
 			return true;
 		}
-		return;
+		return 5;
 	}
 }
