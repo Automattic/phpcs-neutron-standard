@@ -7,6 +7,8 @@ use PHP_CodeSniffer\Sniffs\Sniff;
 use PHP_CodeSniffer\Files\File;
 
 class LongFunctionSniff implements Sniff {
+	public $maxFunctionLines = 40;
+
 	public function register() {
 		return [T_FUNCTION];
 	}
@@ -49,10 +51,8 @@ class LongFunctionSniff implements Sniff {
 				$foundNonComment = false;
 			}
 		}
-		// $functionName = $phpcsFile->getDeclarationName($stackPtr);
-		// echo "\nFunction $functionName is $newlineCount lines long.\n";
-		if ($newlineCount > 20) {
-			$error = 'Function is longer than 20 lines';
+		if (intval($newlineCount) > $this->maxFunctionLines) {
+			$error = "Function is longer than {$this->maxFunctionLines} lines";
 			$phpcsFile->addWarning($error, $stackPtr, 'LongFunction');
 		}
 	}
