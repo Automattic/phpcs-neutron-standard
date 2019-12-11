@@ -19,7 +19,10 @@ class LongFunctionSniff implements Sniff {
 			return;
 		}
 		$tokens = $phpcsFile->getTokens();
-		$startOfFunctionPtr = $helper->getStartOfFunctionPtr($phpcsFile, $stackPtr);
+		$startOfFunctionPtr = $helper->getStartOfFunctionPtr(
+			$phpcsFile,
+			$stackPtr
+		);
 		$endOfFunctionPtr = $helper->getEndOfFunctionPtr($phpcsFile, $stackPtr);
 		$newlineCount = 0;
 		$commentTokens = [
@@ -28,25 +31,34 @@ class LongFunctionSniff implements Sniff {
 			T_DOC_COMMENT_STRING,
 			T_COMMENT,
 			T_DOC_COMMENT_STAR,
-			T_DOC_COMMENT_WHITESPACE
+			T_DOC_COMMENT_WHITESPACE,
 		];
-		$newlineContainingTokens = [
-			T_WHITESPACE,
-			T_COMMENT,
-		];
-		$currentLinePtr = $phpcsFile->findNext(T_WHITESPACE, $startOfFunctionPtr, $endOfFunctionPtr, false, "\n") + 2;
+		$newlineContainingTokens = [T_WHITESPACE, T_COMMENT];
+		$currentLinePtr =
+			$phpcsFile->findNext(
+				T_WHITESPACE,
+				$startOfFunctionPtr,
+				$endOfFunctionPtr,
+				false,
+				"\n"
+			) + 2;
 		$foundNonComment = false;
 		for ($index = $currentLinePtr; $index < $endOfFunctionPtr; $index++) {
 			$token = $tokens[$index];
-			if (! in_array($token['code'], $commentTokens)) {
-				if ($token['code'] !== T_WHITESPACE || $token['content'] !== "\n") {
+			if (!in_array($token['code'], $commentTokens)) {
+				if (
+					$token['code'] !== T_WHITESPACE ||
+					$token['content'] !== "\n"
+				) {
 					$foundNonComment = true;
 				}
 			}
-			if (in_array($token['code'], $newlineContainingTokens) &&
-				$helper->doesStringEndWith($token['content'], "\n")) {
+			if (
+				in_array($token['code'], $newlineContainingTokens) &&
+				$helper->doesStringEndWith($token['content'], "\n")
+			) {
 				if ($foundNonComment) {
-					$newlineCount ++;
+					$newlineCount++;
 				}
 				$foundNonComment = false;
 			}
