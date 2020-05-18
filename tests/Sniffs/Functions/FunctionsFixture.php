@@ -135,7 +135,7 @@ abstract class MyClass {
 	}
 
 	// Next line should warn about unused type hint
-	public function hasReturnHintButNoReturn() : string {
+	public function hasReturnHintButNoReturn(): string {
 	}
 
 	public function hasNoReturn(string $arg1, string $arg2) {
