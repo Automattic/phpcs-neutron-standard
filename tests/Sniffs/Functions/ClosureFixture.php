@@ -21,23 +21,30 @@ class MyClass {
 		};
 	}
 
-	// Next line should warn about type hint spacing
 	public function hasClosureWithReturnAndWrongSpacing() {
+		// Next line should warn about type hint spacing
 		$myFunc = function () : bool {
 			return true;
 		};
 	}
 
-	// Next line should warn about type hint spacing
 	public function hasClosureWithReturnAndWrongSpacing2() {
-		$myFunc = function () :bool{
+		// Next line should warn about type hint spacing
+		$myFunc = function () :bool {
 			return true;
 		};
 	}
 
-	// Next line should be okay
+	public function hasClosureWithReturnAndWrongSpacing3() {
+		// Next line should warn about type hint spacing
+		$myFunc = function (): bool{
+			return true;
+		};
+	}
+
 	public function hasClosureWithReturnAndOptionalReturnType() {
-		$myFunc = function (): ?bool{
+		// Next line should be okay
+		$myFunc = function (): ?bool {
 			return true;
 		};
 	}

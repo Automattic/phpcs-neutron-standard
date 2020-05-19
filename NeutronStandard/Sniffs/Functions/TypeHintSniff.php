@@ -59,7 +59,10 @@ class TypeHintSniff implements Sniff {
 				$phpcsFile->addError( 'Return type colon should be right after closing function parenthesis', $colonPtr, 'ExtraSpace' );
 			}
 			if ($tokens[$colonPtr + 1]['type'] !== 'T_WHITESPACE') {
-				$phpcsFile->addError( 'No space after return type', $colonPtr, 'MissingSpace' );
+				$phpcsFile->addError( 'Missing space before return type', $colonPtr, 'MissingSpace' );
+			}
+			if ($tokens[$returnTypePtr+1]['type'] !== 'T_WHITESPACE') {
+				$phpcsFile->addError( 'Missing space after return type', $colonPtr, 'MissingSpace' );
 			}
 		}
 

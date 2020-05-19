@@ -191,6 +191,18 @@ abstract class MyClass {
 		'something';
 	}
 
+	public function hasIncorrectTypeHintSpacing() : void {
+		'something else';
+	}
+
+	public function hasIncorrectTypeHintSpacingToo() :void {
+		'anything';
+	}
+
+	public function hasIncorrectTypeHintSpacingThree(): void{
+		'other thing';
+	}
+
 	abstract public function abstractFunctionWithReturn(): int;
 
 	// The next line should report an invalid void return
