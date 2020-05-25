@@ -16,7 +16,35 @@ class MyClass {
 	}
 
 	public function hasClosureWithReturn() {
+		$myFunc = function (): bool {
+			return true;
+		};
+	}
+
+	public function hasClosureWithReturnAndWrongSpacing() {
+		// Next line should warn about type hint spacing
 		$myFunc = function () : bool {
+			return true;
+		};
+	}
+
+	public function hasClosureWithReturnAndWrongSpacing2() {
+		// Next line should warn about type hint spacing
+		$myFunc = function () :bool {
+			return true;
+		};
+	}
+
+	public function hasClosureWithReturnAndWrongSpacing3() {
+		// Next line should warn about type hint spacing
+		$myFunc = function (): bool{
+			return true;
+		};
+	}
+
+	public function hasClosureWithReturnAndOptionalReturnType() {
+		// Next line should be okay
+		$myFunc = function (): ?bool {
 			return true;
 		};
 	}

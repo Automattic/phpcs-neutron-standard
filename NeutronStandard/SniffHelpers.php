@@ -68,7 +68,7 @@ class SniffHelpers {
 		if (! $colonPtr) {
 			return false;
 		}
-		return $phpcsFile->findNext(T_WHITESPACE, $colonPtr + 1, null, true, null, true);
+		return $phpcsFile->findNext([T_WHITESPACE,T_NULLABLE], $colonPtr + 1, null, true, null, true);
 	}
 
 	public function getNextSemicolonPtr(File $phpcsFile, $stackPtr) {
