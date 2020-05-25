@@ -3,7 +3,7 @@
 	printerClass="LimeDeck\Testing\Printer"
 	>
 	<testsuites>
-		<testsuite>
+		<testsuite name="NeutronStandard">
 			<directory>tests</directory>
 		</testsuite>
 	</testsuites>
