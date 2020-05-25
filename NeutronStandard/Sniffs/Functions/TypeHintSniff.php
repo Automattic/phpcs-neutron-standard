@@ -81,7 +81,7 @@ class TypeHintSniff implements Sniff {
 			if ($token['code'] === T_CLOSURE) {
 				array_unshift($scopeClosers, $token['scope_closer']);
 			}
-			if (empty($scopeClosers) && in_array( $token['code'], [T_RETURN, T_YIELD], true)) {
+			if (empty($scopeClosers) && in_array($token['code'], [T_RETURN, T_YIELD], true)) {
 				$helper->isReturnValueVoid($phpcsFile, $ptr) ? $voidReturnCount++ : $nonVoidReturnCount++;
 			}
 		}

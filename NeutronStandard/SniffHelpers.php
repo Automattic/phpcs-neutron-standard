@@ -55,7 +55,7 @@ class SniffHelpers {
 
 	public function isReturnValueVoid(File $phpcsFile, $stackPtr) {
 		$tokens = $phpcsFile->getTokens();
-		if (! in_array( $tokens[$stackPtr]['code'], [T_RETURN, T_YIELD], false)) {
+		if (! in_array($tokens[$stackPtr]['code'], [T_RETURN, T_YIELD], false)) {
 			return false;
 		}
 		$returnValue = $this->getNextNonWhitespace($phpcsFile, $stackPtr);
