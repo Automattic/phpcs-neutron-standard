@@ -212,4 +212,11 @@ abstract class MyClass {
 		}
 		return 5;
 	}
+
+	// Test yield as a vaild return token
+	public function iteratorYield( \Iterator $iterator ): \Iterator {
+		foreach( $iterator as $i ) {
+			yield $i;
+		}
+	}
 }

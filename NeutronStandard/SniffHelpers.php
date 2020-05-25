@@ -55,7 +55,7 @@ class SniffHelpers {
 
 	public function isReturnValueVoid(File $phpcsFile, $stackPtr) {
 		$tokens = $phpcsFile->getTokens();
-		if ($tokens[$stackPtr]['code'] !== T_RETURN) {
+		if (! in_array($tokens[$stackPtr]['code'], [T_RETURN, T_YIELD], false)) {
 			return false;
 		}
 		$returnValue = $this->getNextNonWhitespace($phpcsFile, $stackPtr);
@@ -68,7 +68,11 @@ class SniffHelpers {
 		if (! $colonPtr) {
 			return false;
 		}
-		return $phpcsFile->findNext([T_WHITESPACE,T_NULLABLE], $colonPtr + 1, null, true, null, true);
+		$endOfTypePtr = $phpcsFile->findNext([T_OPEN_CURLY_BRACKET, T_SEMICOLON], $colonPtr + 1);
+		if (! $endOfTypePtr) {
+			throw new \Exception('Found colon for return type but no end-of-line');
+		}
+		return $phpcsFile->findPrevious([T_WHITESPACE], $endOfTypePtr - 1, $colonPtr, true);
 	}
 
 	public function getNextSemicolonPtr(File $phpcsFile, $stackPtr) {
