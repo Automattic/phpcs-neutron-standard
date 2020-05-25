@@ -15,9 +15,22 @@
         "test": "./vendor/bin/phpunit",
         "lint": "./vendor/bin/phpcs NeutronStandard"
     },
+    "support"    : {
+        "issues": "https://github.com/sirbrillig/phpcs-neutron-standard/issues",
+        "wiki"  : "https://github.com/sirbrillig/phpcs-neutron-standard/wiki",
+        "source": "https://github.com/sirbrillig/phpcs-neutron-standard"
+    },
+    "config": {
+        "sort-order": true
+    },
     "autoload": {
         "psr-4": {
             "NeutronStandard\\": "NeutronStandard/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "NeutronStandard\\Tests\\": "tests/"
         }
     },
     "require": {
