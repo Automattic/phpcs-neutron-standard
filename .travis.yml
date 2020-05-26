@@ -16,9 +16,10 @@ sudo: false
 
 cache:
   directories:
-    - vendor/
+    - $HOME/.composer/cache
 
 script:
+  - composer validate --strict
   - composer install
   - composer test
   - composer lint
