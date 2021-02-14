@@ -8,6 +8,7 @@ os:
 dist: "xenial"
 
 php:
+  - "8.0"
   - "7.4"
   - "7.3"
   - "7.2"
@@ -16,12 +17,6 @@ php:
 
 jobs:
   fast_finish: true
-  include:
-    - php: "8.0"
-      script:
-        - "composer update --ignore-platform-reqs"
-        - "composer test"
-        - "composer lint"
 
 cache:
   directories:
