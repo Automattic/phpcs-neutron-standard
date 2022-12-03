@@ -98,6 +98,8 @@ In this case it’s really hard to write tests for `doSomething()` because `FOOB
 
 **New functions SHOULD have names which describe the purpose, arguments, and return value of the function as explicitly as possible.**
 
+**New functions MUST NOT begin with "maybe".**
+
 Start all functions with get..., is..., does..., update... etc. as appropriate. Ideally a function name will explain basically what arguments it requires and what it does or what it returns. This is not always possible, but if you find it hard to craft an appropriate name it might be a sign that the function does too much and should be split.
 
 For example, consider a function which handles a WordPress shortcode (the second argument of the `add_shortcode()` function). Assuming the shortcode is `foobar`, then what should we call the handler function?
@@ -107,6 +109,12 @@ We might call it `foobar_shortcode`, but that doesn't really say what it does.
 `process_foobar_shortcode` is better, but still ambiguous about what the function returns.
 
 `get_markup_from_foobar_shortcode` is great because it tells us what the input and the output will be and what the function does.
+
+If you are considering adding `maybe_` to your function name, it's probably a sign that the function could be written differently. It's often better to have two functions for two cases, to wrap one function in another when special behavior is needed, or to just have a function operate only relevant data, leaving other data unchanged.
+
+For example, a function like `maybe_send_email(EmailContent $content, bool $should_send_email): EmailMarkup` could be rewritten as `get_email_markup(EmailContent $content): EmailMarkup` and `send_email_markup(EmailMarkup $markup): void`.
+
+As another example, `maybe_add_address(UserInfo $user_info): UserInfo` could be rewritten as `add_address_when_missing(UserInfo $user_info): UserInfo`.
 
 ## Function size
 
