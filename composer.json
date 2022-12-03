@@ -43,8 +43,8 @@
         "phpunit/phpunit": "^5.0 || ^6.5 || ^7.0 || ^8.0"
     },
     "config": {
-		"allow-plugins": {
-			"dealerdirect/phpcodesniffer-composer-installer": true
-		}
-	},
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    }
 }
