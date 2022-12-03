@@ -2,6 +2,7 @@
     "name": "automattic/phpcs-neutron-standard",
     "description": "A set of phpcs sniffs for modern php development.",
     "type": "phpcodesniffer-standard",
+    "keywords" : [ "phpcs", "static analysis" ],
     "license": "MIT",
     "authors": [
         {
