@@ -21,7 +21,10 @@
         "source": "https://github.com/sirbrillig/phpcs-neutron-standard"
     },
     "config": {
-        "sort-order": true
+        "sort-order": true,
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     },
     "autoload": {
         "psr-4": {
