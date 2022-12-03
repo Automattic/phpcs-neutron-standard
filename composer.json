@@ -41,5 +41,10 @@
         "sirbrillig/phpcs-variable-analysis": "^2.0.1",
         "dealerdirect/phpcodesniffer-composer-installer": "^0.4.4 || ^0.5 || ^0.6 || ^0.7",
         "phpunit/phpunit": "^5.0 || ^6.5 || ^7.0 || ^8.0"
-    }
+    },
+    "config": {
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		}
+	},
 }
