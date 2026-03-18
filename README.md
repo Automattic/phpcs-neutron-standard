@@ -10,7 +10,7 @@ These are a set of modern (PHP >7) linting guidelines meant to be applied in add
 
 These guidelines are being developed primarily for a team within [Automattic](https://automattic.com/), but anyone is free to use them, suggest changes, or report bugs.
 
-This project is a [phpcs](https://github.com/squizlabs/PHP_CodeSniffer) "standard" (a collection of rules or "sniffs") that can be included in any project.
+This project is a [phpcs](https://github.com/PHPCSStandards/PHP_CodeSniffer) "standard" (a collection of rules or "sniffs") that can be included in any project.
 
 ## Installation
 
@@ -30,7 +30,7 @@ composer require --dev automattic/phpcs-neutron-ruleset
 
 ## Configuration
 
-When installing sniff standards in a project, you edit a `phpcs.xml` file with the `rule` tag inside the `ruleset` tag. The `ref` attribute of that tag should specify a standard, category, sniff, or error code to enable. It’s also possible to use these tags to disable or modify certain rules. The [official annotated file](https://href.li/?https://github.com/squizlabs/PHP_CodeSniffer/wiki/Annotated-ruleset.xml) explains how to do this.
+When installing sniff standards in a project, you edit a `phpcs.xml` file with the `rule` tag inside the `ruleset` tag. The `ref` attribute of that tag should specify a standard, category, sniff, or error code to enable. It’s also possible to use these tags to disable or modify certain rules. The [official annotated file](https://href.li/?https://github.com/PHPCSStandards/PHP_CodeSniffer/wiki/Annotated-ruleset.xml) explains how to do this.
 
 ```xml
 <?xml version="1.0"?>
